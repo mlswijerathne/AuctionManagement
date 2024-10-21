@@ -8,12 +8,29 @@ import Layout from './layout/Layout';
 import { useState } from 'react';
 import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
+import FAQPage from './pages/FAQ';
+import ContactUsPage from './pages/ContactUs';
+import AddAuctionBox from './features/AddAuctionBox';
+import ProfilePage from './pages/Profile';
+import AboutUsPage from './pages/AboutUs';
+
+
+
+
 
 
 const navLinks = [
   { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" },
+  { path: "/faq", name: "FAQ" },
+  { path: "/auction", name: "AddAuctionBox" },
+  {path:"/profile", name:"ProfileBox"},
+  {path:"/aboutus", name:"AboutUsBox"},
+
+ 
+
+  
 ]
 
 function App() {
@@ -33,6 +50,12 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path ="/auction" element={<AddAuctionBox />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/contact-us" element={<ContactUsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/aboutus" element={<AboutUsPage />} />
+            
           </Routes>
         </Layout>
       </ThemeProvider>
@@ -41,3 +64,4 @@ function App() {
 }
 
 export default App;
+
