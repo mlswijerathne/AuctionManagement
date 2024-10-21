@@ -8,12 +8,21 @@ import Layout from './layout/Layout';
 import { useState } from 'react';
 import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
+import AddAuctionBox from './features/AddAuctionBox';
+
+
+
 
 
 const navLinks = [
   { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" },
+  { path: "/auction", name: "AddAuctionBox" },
+
+ 
+
+  
 ]
 
 function App() {
@@ -33,6 +42,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path ="/auction" element={<AddAuctionBox />} />
+            
           </Routes>
         </Layout>
       </ThemeProvider>
@@ -41,3 +52,4 @@ function App() {
 }
 
 export default App;
+

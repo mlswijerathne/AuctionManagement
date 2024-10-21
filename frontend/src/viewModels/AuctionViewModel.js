@@ -2,10 +2,12 @@ import { Api } from "@mui/icons-material";
 import AuctionMapper from "../mappers/AuctionMapper";
 import AuctionService from "../services/auctionService";
 import ErrorMessage from "./ErrorViewModel";
+import { validateCreateAuctionDto } from "../dto/auction/createAuctionDto";
+import { validateUpdateAuctionDto } from "../dto/auction/updateAuctionDto";
 
 export default class AuctionViewModel {
     static async addAuction(auctionDto) {
-        const error = validateAuctionDto(auctionDto);
+        const error = validateCreateAuctionDto(auctionDto);
 
         if (error)
             return ErrorMessage.errorMessageFromJoiError(error);
