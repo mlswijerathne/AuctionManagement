@@ -1,13 +1,13 @@
 import FeaturedContactUs from "../features/ContactUsBox";
 
-const ContactUs = () => {
+const ContactUsPage = () => {
   
   return (
     <div>
-        <ContactUs />
+        <FeaturedContactUs />
     </div>
     
   );
 };
 
-export default ContactUs;
+export default ContactUsPage;
