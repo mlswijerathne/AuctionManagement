@@ -7,28 +7,28 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Left Side: Logo and Bid Auctions */}
         <div className="flex items-center">
-          <img src="/src/assets/img/Logo.webp" alt="Bid Auctions Logo" className="h-8 w-auto mr-3" />
+          <img src="Bid.webp" alt="Bid Auctions Logo" className="h-10 w-auto mr-3" />
           <Link to="/" className="text-3xl font-bold">
-            <span className="text-orange-500">B</span>id
-            <span className="text-orange-500">A</span>uctions
+            <span className="text-orange-800">B</span>id
+            <span className="text-orange-700">A</span>uctions
           </Link>
         </div>
 
         {/* Middle: Links */}
         <div className="hidden md:flex space-x-6 text-0.8xl font-bold">
-          <Link to="/auction" className="hover:text-primary">Auction Page</Link>
-          <Link to="/admin" className="hover:text-primary">Dashboard</Link>
-          <Link to="/profile" className="hover:text-primary">Profile</Link>
-          <Link to="/aboutus" className="hover:text-primary">About Us</Link>
+          <Link to="/auction" className="hover:text-orange-500">Auction Page</Link>
+          <Link to="/admin" className="hover:text-orange-500">Dashboard</Link>
+          <Link to="/profile" className="hover:text-orange-500">Profile</Link>
+          <Link to="/aboutus" className="hover:text-orange-500">About Us</Link>
           
         </div>
 
         {/* Right Side: FAQ, Login, Register */}
         <div className="hidden md:flex space-x-4 text-0.5xl font-bold">
-          <Link to="/faq" className="hover:text-primary">FAQ</Link>
+          <Link to="/faq" className="hover:text-orange-500">FAQ</Link>
           
           {/* Additional Login Button */}
-          <Link to="/login" className="px-4 py-1  bg-orange-500 text-white rounded-md hover:bg-orange-600 transition duration-200 ease-in-out">
+          <Link to="/login" className="px-4 py-1  bg-orange-600 text-white rounded-md hover:bg-orange-600 transition duration-200 ease-in-out">
             Login
           </Link>
           
