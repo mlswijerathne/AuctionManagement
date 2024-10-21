@@ -112,12 +112,12 @@ const Footer = () => {
           </h4>
           <ul className="space-y-2">
             <li>
-            <a href="/terms" className="hover:text-orange-500">Terms of Service</a>
+            <a href="/terms" className="text-gray-400 hover:text-orange-500 transition duration-200">Terms of Service</a>
             </li>
             <li>
-              <a href="/privacy" className="hover:text-orange-500">Privacy Policy</a>
+              <a href="/privacy" className="text-gray-400 hover:text-orange-500 transition duration-200">Privacy Policy</a>
               </li>
-              <li><a href="/contact" className="hover:text-orange-500">Contact Us</a></li>
+              <li><a href="/contact" className="text-gray-400 hover:text-orange-500 transition duration-200">Contact Us</a></li>
           </ul>
         </div>
 

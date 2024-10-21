@@ -1,7 +1,6 @@
 import { useTheme } from "@emotion/react";
-import { Box, Button, Container, TextField, Typography, Alert } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Alert, Grid } from "@mui/material";
 import { useState } from "react";
-import { Password } from "@mui/icons-material";
 
 const LoginBox = ({ handleSubmit }) => {
   const [formData, setFormData] = useState({
@@ -17,7 +16,6 @@ const LoginBox = ({ handleSubmit }) => {
       ...prevData,
       [name]: value
     }));
-    // Clear error when user starts typing
     setError("");
   };
 
@@ -30,44 +28,19 @@ const LoginBox = ({ handleSubmit }) => {
   };
 
   const onSubmit = async (e) => {
+    e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
       try {
         await handleSubmit(e, formData.email, formData.password);
-        // Clear form after successful submission
         setFormData({ email: "", password: "" });
       } catch (err) {
         setError(err.message || "Login failed. Please try again.");
       } finally {
         setIsSubmitting(false);
       }
-    } else {
-      e.preventDefault();
     }
   };
-
-
-  // const [logUser,setLogUser]  = useState({
-  //   email:"",
-  //   Password:""
-  // });
-
-  // const handleChange = (e)=>{
-  //   setLogUser({
-  //     ...logUser,
-  //     [e.target.name]:e.target.value
-  //   })
-  // }
-
-  // const onSubmit = async(e)=>{
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post("http://localhost:5189/api/v1/accounts/login",logUser);
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.log(error.message)
-  //   }
-  // }
 
   const theme = useTheme();
   const backgroundColor = theme.palette.mode === "dark"
@@ -75,67 +48,90 @@ const LoginBox = ({ handleSubmit }) => {
     : theme.palette.grey[100];
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="md">
       <Box
         sx={{
           marginTop: 8,
           padding: 4,
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           backgroundColor: backgroundColor,
+          borderRadius: 2,
         }}
       >
-        <Typography component="h1" variant="h4">
-          Login
-        </Typography>
-        {error && (
-          <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Box
-          component="form"
-          onSubmit={onSubmit}
-          sx={{ mt: 1, width: '100%' }}
-        >
-          <TextField
-            margin="normal"
-            id="email"
-            name="email"
-            autoComplete="email"
-            label="Email"
-            type="email"
-            autoFocus
-            fullWidth
-            value={formData.email}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Logging in...' : 'Login'}
-          </Button>
-        </Box>
+        <Grid container spacing={2}>
+          {/* Left side - Illustration */}
+          <Grid item xs={12} md={6}>
+            <Box
+              component="img"
+              src="Login.png"
+              alt="Login Illustration"
+              sx={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 2 }}
+            />
+          </Grid>
+          
+          {/* Right side - Login Form */}
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: '100%',
+              }}
+            >
+              <Typography component="h1" variant="h4">
+                Auction Login Page
+              </Typography>
+              {error && (
+                <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+                  {error}
+                </Alert>
+              )}
+              <Box
+                component="form"
+                onSubmit={onSubmit}
+                sx={{ mt: 1, width: '100%' }}
+              >
+                <TextField
+                  margin="normal"
+                  id="email"
+                  name="email"
+                  autoComplete="email"
+                  label="Email"
+                  type="email"
+                  autoFocus
+                  fullWidth
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2, backgroundColor: 'orange', color: 'white', '&:hover': { backgroundColor: '#ff8c00' } }}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Logging in...' : 'Login'}
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </Container>
   );
