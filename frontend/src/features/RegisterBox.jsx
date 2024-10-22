@@ -33,8 +33,6 @@ const RegisterBox = ({ handleSubmit }) => {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-    // Add more validation as needed
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -53,13 +51,17 @@ const RegisterBox = ({ handleSubmit }) => {
     : theme.palette.grey[100];
 
   return (
-    <Container component="main" maxWidth="md">
+    <Container component="main" maxWidth="lg">
       <Box
         sx={{
           display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' }, // Stack on small screens
           alignItems: 'center',
           justifyContent: 'space-between',
           marginTop: 8,
+          backgroundColor: backgroundColor,
+          borderRadius: 2,
+          overflow: 'hidden',
         }}
       >
         <Box
@@ -68,15 +70,14 @@ const RegisterBox = ({ handleSubmit }) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: backgroundColor,
             padding: 4,
-            borderRadius: 2,
+            backgroundColor: backgroundColor,
           }}
         >
           <img
             src="Register.webp" // Replace with your image path
             alt="Registration Illustration"
-            style={{ width: '100%', borderRadius: '', maxWidth: '400px' }} // Adjust size as necessary
+            style={{ width: '100%', maxWidth: '400px', height: 'auto', borderRadius: '8px' }} // Adjust size as necessary
           />
         </Box>
 
@@ -88,16 +89,15 @@ const RegisterBox = ({ handleSubmit }) => {
             flexDirection: "column",
             alignItems: "center",
             backgroundColor: backgroundColor,
-            borderRadius: 2,
           }}
         >
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h4" gutterBottom>
             Auction Register Page
           </Typography>
           <Box
             component="form"
             onSubmit={onSubmit}
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, width: '100%', maxWidth: '400px' }} // Ensures the form doesn't expand too much
           >
             <TextField
               margin="normal"
@@ -211,7 +211,7 @@ const RegisterBox = ({ handleSubmit }) => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, backgroundColor: '#FF8C00', color: '#fff' }} // Orange color
             >
               Register
             </Button>

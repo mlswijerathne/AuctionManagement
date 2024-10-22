@@ -13,6 +13,7 @@ import ContactUsPage from './pages/ContactUs';
 import AddAuctionBox from './features/AddAuctionBox';
 import ProfilePage from './pages/Profile';
 import AboutUsPage from './pages/AboutUs';
+import DashboardPage from './pages/Dashboard';
 
 
 
@@ -27,6 +28,7 @@ const navLinks = [
   { path: "/auction", name: "AddAuctionBox" },
   {path:"/profile", name:"ProfileBox"},
   {path:"/aboutus", name:"AboutUsBox"},
+  {path:"/dashboard",name:"DashboardBox"},
 
  
 
@@ -55,6 +57,7 @@ function App() {
             <Route path="/contact-us" element={<ContactUsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/aboutus" element={<AboutUsPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             
           </Routes>
         </Layout>
