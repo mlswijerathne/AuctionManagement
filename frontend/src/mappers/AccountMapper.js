@@ -10,7 +10,7 @@ export default class AccountMapper {
         accountDto.lastName = data.lastName;
         accountDto.DOB = new Date(data.dob);
         accountDto.id = data.id;
-        accountDto.ContactNumber = data.contactNumber;
+        accountDto.contactNumber = data.contactNumber;
         accountDto.address = data.address;
 
         return accountDto;

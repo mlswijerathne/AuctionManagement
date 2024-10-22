@@ -8,7 +8,7 @@ class UpdateAccountDto{
     lastName = "";
     DOB = "";
     contactNumber = "";
-    adress = "";
+    address = "";
    
 }
 
@@ -19,7 +19,7 @@ export function validateUpdateAccountDto(updateAccountDto){
         lastName: Joi.string().min(4).max(255),
         DOB: Joi.date().max("now").required(),
         contactNumber: Joi.string().min(10),
-        address: Joi.string(255)
+        address: Joi.string().min(4).max(255)
        
     })
     return schema.validate(updateAccountDto);

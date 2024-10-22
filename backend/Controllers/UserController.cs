@@ -150,7 +150,7 @@ namespace DreamBid.Controllers
 
          [HttpPost("me/profilePicture")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> SaveProfilePicture([FromForm]IFormFile profilePicture)
+        public async Task<IActionResult> SaveProfilePicture(IFormFile profilePicture)
         {
             var userId = User.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
