@@ -1,5 +1,6 @@
 // featured/FeaturedFAQ.jsx
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from "@mui/material";
+import React from "react";
+import { Typography, Accordion, AccordionSummary, AccordionDetails, Button } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ContactMailIcon from "@mui/icons-material/ContactMail"; // Import icon for contact us
 
@@ -28,12 +29,12 @@ const FeaturedFAQ = () => {
   ];
 
   return (
-    <Box sx={{ maxWidth: 600, margin: 'auto', mt: 4 }}>
-      <Box sx={{ mb: 4, textAlign: 'center' }}>
-        <img src="FAQ.jpg" alt="FAQ Illustration" style={{ width: '100%', borderRadius: '8px' }} />
-      </Box>
+    <div className="max-w-3xl mx-auto mt-8">
+      <div className="mb-8 text-center">
+        <img src="FAQ.jpg" alt="FAQ Illustration" className="w-full rounded-lg" />
+      </div>
       <Typography variant="h2" align="center" gutterBottom>
-         FAQs
+        FAQs
       </Typography>
       {faqs.map((faq, index) => (
         <Accordion key={index}>
@@ -47,22 +48,21 @@ const FeaturedFAQ = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
+      <div className="text-center mt-8">
         <Typography variant="h5" gutterBottom>
           Need More Help?
         </Typography>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          startIcon={<ContactMailIcon />} 
+        <Button
+          variant="contained"
+          className="bg-orange-500 hover:bg-orange-600 text-white"
+          startIcon={<ContactMailIcon />}
           href="/contact-us" // Change this to your actual contact page route
         >
           Contact Us
         </Button>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 
 export default FeaturedFAQ;
-

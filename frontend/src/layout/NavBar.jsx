@@ -16,8 +16,8 @@ const Navbar = () => {
 
         {/* Middle: Links */}
         <div className="hidden md:flex space-x-6 text-0.8xl font-bold">
-          <Link to="/auction" className="hover:text-orange-500">Auction Page</Link>
-          <Link to="/admin" className="hover:text-orange-500">Dashboard</Link>
+          <Link to="/auction" className="hover:text-orange-500">Auctions</Link>
+          <Link to="/dashboard" className="hover:text-orange-500">Dashboard</Link>
           <Link to="/profile" className="hover:text-orange-500">Profile</Link>
           <Link to="/aboutus" className="hover:text-orange-500">About Us</Link>
           
