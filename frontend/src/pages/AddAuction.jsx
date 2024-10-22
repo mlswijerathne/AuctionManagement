@@ -6,7 +6,7 @@ const AuctionPage = () => {
   const handleSubmit = async (e, auctionData) => {
     e.preventDefault();
 
-    try {
+    
       // Create auction item DTO
       const createAuctionDto = new CreateAuctionDto();
       createAuctionDto.title = auctionData.title;
@@ -26,10 +26,7 @@ const AuctionPage = () => {
         // You may want to reset the form, redirect, or show a success message
         // Optionally, you can reset the form here or perform another action
       }
-    } catch (error) {
-      console.error('Error adding auction item:', error.message);
-      // Optionally, set error state here to show in the UI if needed
-    }
+
   };
 
   return <AddAuctionBox handleSubmit={handleSubmit} />

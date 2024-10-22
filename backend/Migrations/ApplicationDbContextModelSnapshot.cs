@@ -30,6 +30,9 @@ namespace backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AuctionPicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -173,13 +176,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "827080e8-ae95-43bf-9e14-7b3ee93504ba",
+                            Id = "c5aa10a0-50d7-494d-b2d5-082bf9848c1a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4b2f76db-9c1c-4c58-8b4e-2827a87c5262",
+                            Id = "a5c10f60-edd1-4b6a-aed3-cbeaa8848440",
                             Name = "User",
                             NormalizedName = "USER"
                         });

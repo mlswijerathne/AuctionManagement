@@ -4,6 +4,7 @@ using DreamBid.Dtos.User;
 using DreamBid.Extensions;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
+using DreamBid.Utils;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ namespace DreamBid.Controllers
         private readonly ITokenService _tokenService;
         private readonly IFileManagerService _fileManagerService;
         private readonly ILogger<AccountController> _logger;
-        private readonly string _profilePicturePath = "users/profilePictures/";
+        private readonly string _profilePicturePath = FileManagementUtil.GetOsDependentPath("profilePicture/lakshitha/1/d");
 
         public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, IFileManagerService fileManagerService)
         {
@@ -167,7 +168,7 @@ namespace DreamBid.Controllers
 
             // store the profile picture
             this._logger.LogCritical("Saving");
-            var newFilePath = await this._fileManagerService.StoreFile(profilePicture, subFilePathName, true);
+            var newFilePath = await this._fileManagerService.StoreFile(profilePicture, subFilePathName,this._logger, true);
             this._logger.LogCritical($"The value is {newFilePath}");
             this._logger.LogCritical("Saved");
             if (newFilePath == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to save the profile picture"));
