@@ -1,11 +1,16 @@
-// features/Profile.jsx
-import { Box, Typography, TextField, Button, Avatar } from "@mui/material";
+import { Box, Typography, TextField, Button, Avatar, MenuItem } from "@mui/material";
 import { useState } from "react";
 
 const ProfileBox = () => {
   const [formData, setFormData] = useState({
-    username: "JohnDoe",
+    firstName: "",
+    lastName: "",
+    birthday: "",
+    country: "",
+    status: "",
     email: "johndoe@example.com",
+    address: "",
+    contactNumber: "",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   });
 
@@ -19,9 +24,11 @@ const ProfileBox = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement your save logic here
     console.log("Profile updated:", formData);
   };
+
+  const countries = ["Sri Lanka", "United States", "Canada", "India", "Germany", "Australia"];
+  const statusOptions = ["Married", "Single"];
 
   return (
     <Box
@@ -38,23 +45,32 @@ const ProfileBox = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Profile
       </Typography>
-      
+
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
         <Avatar 
-          alt={formData.username} 
+          alt={formData.firstName} 
           src="/path/to/profile-pic.jpg" // Replace with your image path
           sx={{ width: 100, height: 100, mb: 2 }}
         />
-        <Typography variant="h6">{formData.username}</Typography>
+        <Typography variant="h6">{formData.firstName} {formData.lastName}</Typography>
       </Box>
 
       <form onSubmit={handleSubmit}>
         <TextField
           margin="normal"
-          label="Username"
-          name="username"
+          label="First Name"
+          name="firstName"
           fullWidth
-          value={formData.username}
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+        />
+        <TextField
+          margin="normal"
+          label="Last Name"
+          name="lastName"
+          fullWidth
+          value={formData.lastName}
           onChange={handleChange}
           required
         />
@@ -70,6 +86,63 @@ const ProfileBox = () => {
         />
         <TextField
           margin="normal"
+          label="Contact Number"
+          name="contactNumber"
+          fullWidth
+          value={formData.contactNumber}
+          onChange={handleChange}
+          required
+        />
+        <TextField
+          margin="normal"
+          label="Address"
+          name="address"
+          fullWidth
+          value={formData.address}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          label="Birthday"
+          name="birthday"
+          type="date"
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+          value={formData.birthday}
+          onChange={handleChange}
+        />
+        <TextField
+          select
+          margin="normal"
+          label="Country"
+          name="country"
+          fullWidth
+          value={formData.country}
+          onChange={handleChange}
+        >
+          {countries.map((country) => (
+            <MenuItem key={country} value={country}>
+              {country}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          select
+          margin="normal"
+          label="Status"
+          name="status"
+          fullWidth
+          value={formData.status}
+          onChange={handleChange}
+        >
+          {statusOptions.map((status) => (
+            <MenuItem key={status} value={status}>
+              {status}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          margin="normal"
           label="Bio"
           name="bio"
           fullWidth
@@ -81,8 +154,14 @@ const ProfileBox = () => {
         <Button
           type="submit"
           variant="contained"
-          color="primary"
-          sx={{ mt: 3 }}
+          sx={{ 
+            mt: 3, 
+            backgroundColor: "#ff8c00", // Orange color
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#e07b00" // Darker orange on hover
+            }
+          }}
         >
           Save Changes
         </Button>
@@ -92,3 +171,4 @@ const ProfileBox = () => {
 };
 
 export default ProfileBox;
+

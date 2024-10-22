@@ -32,8 +32,8 @@ const FeaturedFAQ = () => {
       <Box sx={{ mb: 4, textAlign: 'center' }}>
         <img src="FAQ.jpg" alt="FAQ Illustration" style={{ width: '100%', borderRadius: '8px' }} />
       </Box>
-      <Typography variant="h4" align="center" gutterBottom>
-        Auctions FAQs
+      <Typography variant="h2" align="center" gutterBottom>
+         FAQs
       </Typography>
       {faqs.map((faq, index) => (
         <Accordion key={index}>
