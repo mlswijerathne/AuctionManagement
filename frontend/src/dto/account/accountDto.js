@@ -5,7 +5,7 @@ class AccountDto {
     lastName = "";
     DOB = new Date();
     id = "";
-    ContactNumber = "";
+    contactNumber = "";
     address = "";
 
 }

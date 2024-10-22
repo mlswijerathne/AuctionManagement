@@ -2,6 +2,7 @@ import { Api } from "@mui/icons-material";
 import AccountMapper from "../mappers/AccountMapper";
 import AccountService from "../services/accountService";
 import ErrorMessage from "./ErrorViewModel";
+import { validateUpdateAccountDto } from "../dto/account/updateAccountDto";
 
 
 
@@ -35,13 +36,16 @@ export default class AccountViewModel{
 
 
     static async updateAccount(updateAccountDto){
+        
+        const {error} = validateUpdateAccountDto(updateAccountDto);
+        
+        if(error){
+            console.log(error);
+            return ErrorMessage.errorMessageFromJoiError(error);
 
-        const error = validateUpdateAccountDto(updateAccountDto);
-
-        if(error)
-           return ErrorMessage.errorMessageFromJoiError(error);
-
+        }
         const response =await AccountService.updateAccount(updateAccountDto);
+        console.log("world");
         if ("error" in response){
             return ErrorMessage.errorMessageFromString(response.error);
         }

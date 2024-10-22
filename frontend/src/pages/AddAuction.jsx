@@ -1,6 +1,6 @@
-import AuctionForm from "../features/AuctionForm";
+import AddAuctionBox from "../components/AddAuctionBox";
 import AuctionViewModel from "../viewModels/AuctionViewModel";
-import AuctionItemDto from "../dto/auction/auctionItemDto";
+import CreateAuctionDto from "../dto/auction/createAuctionDto";
 
 const AuctionPage = () => {
   const handleSubmit = async (e, auctionData) => {
@@ -8,29 +8,32 @@ const AuctionPage = () => {
 
     try {
       // Create auction item DTO
-      const auctionItemDto = new AuctionItemDto();
-      auctionItemDto.title = auctionData.title;
-      auctionItemDto.description = auctionData.description;
-      auctionItemDto.startingBid = auctionData.startingBid;
-      auctionItemDto.auctionEndDate = auctionData.auctionEndDate;
+      const createAuctionDto = new CreateAuctionDto();
+      createAuctionDto.title = auctionData.title;
+      createAuctionDto.description = auctionData.description;
+      createAuctionDto.startingPrice = parseFloat(auctionData.startingPrice); // Ensure this is a number
+      createAuctionDto.startTime = auctionData.startingTime; // Date string
+      createAuctionDto.endTime = auctionData.endTime; // Date string
+      createAuctionDto.imageUrl = auctionData.imgUrl; // Use the correct key
 
       // Call the method to add auction item
-      const response = await AuctionViewModel.addAuctionItem(auctionItemDto);
+      const response = await AuctionViewModel.addAuction(createAuctionDto);
 
       if ("error" in response) {
         throw new Error(response.error);
       } else {
         console.log('Auction item added successfully:', response);
-        // Handle successful addition (e.g., redirect or show a success message)
+        // You may want to reset the form, redirect, or show a success message
+        // Optionally, you can reset the form here or perform another action
       }
     } catch (error) {
       console.error('Error adding auction item:', error.message);
-      throw error; // Handle this in the AuctionForm if needed
+      // Optionally, set error state here to show in the UI if needed
     }
   };
 
-  return <AuctionForm handleSubmit={handleSubmit} />;
+  return <AddAuctionBox handleSubmit={handleSubmit} />
+  
 };
 
 export default AuctionPage;
-

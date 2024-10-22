@@ -1,18 +1,36 @@
-import { Box, Typography, TextField, Button, Avatar, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { Box, Typography, TextField, Button, Avatar } from "@mui/material";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const ProfileBox = () => {
+const ProfileBox = ({ handleSubmit, profileData }) => {
   const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
     firstName: "",
     lastName: "",
-    birthday: "",
-    country: "",
-    status: "",
-    email: "johndoe@example.com",
-    address: "",
+    DOB: "",
     contactNumber: "",
-    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    address: "",
   });
+  
+  const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (profileData) {
+      const formattedDOB = profileData.DOB ? new Date(profileData.DOB).toISOString().split('T')[0] : "";
+      setFormData({
+        userName: profileData.userName || "",
+        email: profileData.email || "",
+        firstName: profileData.firstName || "",
+        lastName: profileData.lastName || "",
+        DOB: formattedDOB,
+        contactNumber: profileData.contactNumber || "",
+        address: profileData.address || "",
+      });
+    }
+  }, [profileData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,13 +40,23 @@ const ProfileBox = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("Profile updated:", formData);
+    try {
+      setError(null);
+      await handleSubmit(formData);
+      setIsEditing(false);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
-  const countries = ["Sri Lanka", "United States", "Canada", "India", "Germany", "Australia"];
-  const statusOptions = ["Married", "Single"];
+  const ProfileField = ({ label, value }) => (
+    <Box sx={{ mb: 2, textAlign: 'center' }}>
+      <Typography variant="subtitle2" color="text.secondary">{label}</Typography>
+      <Typography variant="body1">{value || "Not provided"}</Typography>
+    </Box>
+  );
 
   return (
     <Box
@@ -49,126 +77,45 @@ const ProfileBox = () => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
         <Avatar 
           alt={formData.firstName} 
-          src="/path/to/profile-pic.jpg" // Replace with your image path
+          src="/path/to/profile-pic.jpg"
           sx={{ width: 100, height: 100, mb: 2 }}
         />
         <Typography variant="h6">{formData.firstName} {formData.lastName}</Typography>
       </Box>
 
-      <form onSubmit={handleSubmit}>
-        <TextField
-          margin="normal"
-          label="First Name"
-          name="firstName"
-          fullWidth
-          value={formData.firstName}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          margin="normal"
-          label="Last Name"
-          name="lastName"
-          fullWidth
-          value={formData.lastName}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          margin="normal"
-          label="Email"
-          name="email"
-          type="email"
-          fullWidth
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          margin="normal"
-          label="Contact Number"
-          name="contactNumber"
-          fullWidth
-          value={formData.contactNumber}
-          onChange={handleChange}
-          required
-        />
-        <TextField
-          margin="normal"
-          label="Address"
-          name="address"
-          fullWidth
-          value={formData.address}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="normal"
-          label="Birthday"
-          name="birthday"
-          type="date"
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          value={formData.birthday}
-          onChange={handleChange}
-        />
-        <TextField
-          select
-          margin="normal"
-          label="Country"
-          name="country"
-          fullWidth
-          value={formData.country}
-          onChange={handleChange}
-        >
-          {countries.map((country) => (
-            <MenuItem key={country} value={country}>
-              {country}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          select
-          margin="normal"
-          label="Status"
-          name="status"
-          fullWidth
-          value={formData.status}
-          onChange={handleChange}
-        >
-          {statusOptions.map((status) => (
-            <MenuItem key={status} value={status}>
-              {status}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          margin="normal"
-          label="Bio"
-          name="bio"
-          fullWidth
-          multiline
-          rows={4}
-          value={formData.bio}
-          onChange={handleChange}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ 
-            mt: 3, 
-            backgroundColor: "#ff8c00", // Orange color
-            color: "white",
-            "&:hover": {
-              backgroundColor: "#e07b00" // Darker orange on hover
-            }
-          }}
-        >
-          Save Changes
-        </Button>
-      </form>
+      {error && (
+        <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
+          {error}
+        </Typography>
+      )}
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <ProfileField label="UserName" value={formData.userName} />
+          <ProfileField label="Email" value={formData.email} />
+          <ProfileField label="First Name" value={formData.firstName} />
+          <ProfileField label="Last Name" value={formData.lastName} />
+          <ProfileField label="Birthday" value={formData.DOB} />
+          <ProfileField label="Contact Number" value={formData.contactNumber} />
+          <ProfileField label="Address" value={formData.address} />
+
+          <Button
+            onClick={() => navigate("/editprofile")}
+            variant="contained"
+            sx={{ 
+              mt: 3, 
+              backgroundColor: "#ff8c00",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#e07b00"
+              }
+            }}
+          >
+            Edit Profile
+          </Button>
+        </Box>
+     
     </Box>
   );
 };
 
 export default ProfileBox;
-
