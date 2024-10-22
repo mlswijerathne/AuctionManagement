@@ -20,6 +20,7 @@ namespace DreamBid.Dtos.Auction
         
         [Required]
         public DateTime EndTime { get; set; }
+        public IFormFile? AuctionPicturePath { get; set; }
        
 
     }

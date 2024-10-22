@@ -17,7 +17,8 @@ namespace DreamBid.Mappers
                 LastName = userModel.LastName,
                 DOB = userModel.DOB,
                 ContactNumber = userModel.ContactNumber,
-                Address = userModel.Address,
+                Address = userModel.Address
+                
                 
             };
         }
@@ -32,7 +33,8 @@ namespace DreamBid.Mappers
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 ContactNumber = registerDto.ContactNumber,
-                Address = registerDto.Address,
+                Address = registerDto.Address
+                
                 
             };
         }

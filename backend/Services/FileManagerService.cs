@@ -22,9 +22,10 @@ namespace DreamBid.Service
         /// <param name="subFilePath">This path should not starts with /. As an example auction/images/fileName.txt don't give it like /auction/images/fileName.txt</param>
         /// <param name="overWrite">OverWrite if the file exists</param>
         /// <returns>The subFilePath name from the base directory</returns>
-        public async Task<string> StoreFile(IFormFile file, string subFilePath, Boolean overWrite = false)
+        public async Task<string> StoreFile(IFormFile file, string subFilePath,ILogger logger, Boolean overWrite = false)
         {
             subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
+            logger.LogCritical($"The subFilePath is {subFilePath}");
 
             // get the absolute subFilePath
             var FullPath = Path.Combine(this._baseDirectory, subFilePath);

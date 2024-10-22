@@ -27,6 +27,8 @@ namespace DreamBid.Models
 
         [Required]
         public DateTime EndTime { get; set; }
+        
+        public string? AuctionPicturePath { get; set; }
 
         [ForeignKey("UserId")]
         public User User { get; set; }
