@@ -1,11 +1,12 @@
-// features/ContactUs.jsx
-import { Box, Typography, TextField, Button, Alert } from "@mui/material";
+import { Box, Typography, TextField, Button, Alert, Grid } from "@mui/material";
 import { useState } from "react";
 
 const ContactUsBox = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    phone: "",
     message: "",
   });
   const [error, setError] = useState("");
@@ -22,7 +23,8 @@ const ContactUsBox = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) {
+    const { firstName, lastName, email, phone, message } = formData;
+    if (!firstName || !lastName || !email || !phone || !message) {
       setError("Please fill in all fields");
       return;
     }
@@ -31,7 +33,7 @@ const ContactUsBox = () => {
       // Implement your form submission logic here (e.g., send to an API)
       // For demonstration, we'll just show a success message
       setSuccess("Your message has been sent successfully!");
-      setFormData({ name: "", email: "", message: "" }); // Reset form
+      setFormData({ firstName: "", lastName: "", email: "", phone: "", message: "" }); // Reset form
     } catch (err) {
       setError("Submission failed. Please try again.");
     }
@@ -42,7 +44,7 @@ const ContactUsBox = () => {
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' }, // Stack on small screens
-        maxWidth: 800,
+        maxWidth: 900,
         margin: "auto",
         mt: 4,
         borderRadius: 2,
@@ -80,46 +82,80 @@ const ContactUsBox = () => {
         {error && <Alert severity="error">{error}</Alert>}
         {success && <Alert severity="success">{success}</Alert>}
         <form onSubmit={handleSubmit}>
-          <TextField
-            margin="normal"
-            label="Name"
-            name="name"
-            fullWidth
-            value={formData.name}
-            onChange={handleChange}
-            required
-            sx={{ backgroundColor: "white" }}
-          />
-          <TextField
-            margin="normal"
-            label="Email"
-            name="email"
-            type="email"
-            fullWidth
-            value={formData.email}
-            onChange={handleChange}
-            required
-            sx={{ backgroundColor: "white" }}
-          />
-          <TextField
-            margin="normal"
-            label="Message"
-            name="message"
-            fullWidth
-            multiline
-            rows={4}
-            value={formData.message}
-            onChange={handleChange}
-            required
-            sx={{ backgroundColor: "white" }}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="normal"
+                label="First Name"
+                name="firstName"
+                fullWidth
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                sx={{ backgroundColor: "white" }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="normal"
+                label="Last Name"
+                name="lastName"
+                fullWidth
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                sx={{ backgroundColor: "white" }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                label="Email"
+                name="email"
+                type="email"
+                fullWidth
+                value={formData.email}
+                onChange={handleChange}
+                required
+                sx={{ backgroundColor: "white" }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                label="Phone Number"
+                name="phone"
+                type="tel"
+                fullWidth
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                sx={{ backgroundColor: "white" }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                label="Leave us a few words"
+                name="message"
+                fullWidth
+                multiline
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                required
+                sx={{ backgroundColor: "white" }}
+              />
+            </Grid>
+          </Grid>
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ mt: 3 }}
+            fullWidth
+            sx={{ mt: 3, backgroundColor: "#ff8c00", "&:hover": { backgroundColor: "#e07b00" } }}
           >
-            Send Message
+            Submit
           </Button>
         </form>
       </Box>
