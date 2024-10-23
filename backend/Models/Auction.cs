@@ -34,6 +34,8 @@ namespace DreamBid.Models
         public User User { get; set; }
 
         public string UserId { get; set; }
+        [NotMapped]
+        public string? PhotoData { get; set; }
     
     }
 }

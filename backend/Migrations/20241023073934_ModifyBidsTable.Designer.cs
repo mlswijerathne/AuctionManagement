@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241022191519_init")]
-    partial class init
+    [Migration("20241023073934_ModifyBidsTable")]
+    partial class ModifyBidsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,6 +63,39 @@ namespace backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Auctions");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Bid", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("AuctionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BidTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAutoBid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuctionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bids");
                 });
 
             modelBuilder.Entity("DreamBid.Models.User", b =>
@@ -179,13 +212,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c5aa10a0-50d7-494d-b2d5-082bf9848c1a",
+                            Id = "9c0d5900-eef2-47ea-ae48-cd94d26bb09e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a5c10f60-edd1-4b6a-aed3-cbeaa8848440",
+                            Id = "a19a4616-0bf5-4831-a0d2-83c5eea616a4",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -304,6 +337,25 @@ namespace backend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Bid", b =>
+                {
+                    b.HasOne("DreamBid.Models.Auction", "Auction")
+                        .WithMany()
+                        .HasForeignKey("AuctionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DreamBid.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Auction");
 
                     b.Navigation("User");
                 });

@@ -29,6 +29,7 @@ namespace DreamBid.Mappers
                 StartingPrice = auction.StartingPrice,
                 StartTime = auction.StartTime,
                 EndTime = auction.EndTime,
+                PhotoData = auction.PhotoData
                 
             };
         }

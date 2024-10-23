@@ -37,9 +37,7 @@ const EditProfile = () => {
       updateAccountDto.DOB = formData.DOB;
       updateAccountDto.contactNumber = formData.contactNumber;
       updateAccountDto.address = formData.address;
-      console.log("1");
       const response = await AccountViewModel.updateAccount(updateAccountDto);
-      console.log("2");
       
       if ("error" in response) {
         console.error('Profile update failed:', response.error);

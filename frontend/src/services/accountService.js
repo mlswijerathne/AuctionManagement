@@ -26,9 +26,9 @@ export default class AccountService {
     }
     static async updateAccount(updateAccountDto) {
         try {
-            console.log("service1");
+            
             const response = await API.post("/api/v1/accounts/me", updateAccountDto);
-            console.log("service2");
+            
             return response.data;
         } catch (error) {
             return {

@@ -45,7 +45,6 @@ export default class AccountViewModel{
 
         }
         const response =await AccountService.updateAccount(updateAccountDto);
-        console.log("world");
         if ("error" in response){
             return ErrorMessage.errorMessageFromString(response.error);
         }
