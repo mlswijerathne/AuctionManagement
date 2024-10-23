@@ -7,6 +7,7 @@ import AccountService from "../services/accountService"; // Import the AccountSe
 const SetImageBox = ({ handleImageUpload, handleImageDelete }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState("");
+  
 
   // Fetch the existing profile picture when the component mounts
   useEffect(() => {
@@ -55,6 +56,8 @@ const SetImageBox = ({ handleImageUpload, handleImageDelete }) => {
       setSelectedImage(null); // Clear selected image on successful deletion
     }
   };
+
+  
 
   return (
     <Box

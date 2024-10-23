@@ -1,10 +1,13 @@
 // src/pages/SetImagePage.jsx
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import SetImageBox from "../features/SetImageBox";
-import AccountService from "../services/accountService"; // Import AccountService
+import AccountService from "../services/accountService";
 
 const SetImagePage = () => {
+  const navigate = useNavigate(); // Add navigation hook
+
   const handleImageUpload = async (formData) => {
     try {
       const response = await AccountService.updateProfilePicture(formData);
@@ -12,26 +15,21 @@ const SetImagePage = () => {
         console.error("Image upload failed:", response.error);
       } else {
         console.log("Image uploaded successfully:", response);
-        // Optionally redirect or show a success message here
+        navigate("/EditProfile"); // Redirect back to the Edit Profile page after successful upload
       }
     } catch (err) {
       console.error("Error during image upload:", err);
     }
+    navigate('/EditProfile');
   };
 
   const handleImageDelete = async () => {
-    try {
-      const response = await AccountService.deleteProfilePicture();
-      if ("error" in response) {
-        console.error("Image deletion failed:", response.error);
-        return response; // Return response to handle errors
-      } else {
-        console.log("Image deleted successfully:", response);
-        // Optionally show a success message here
-      }
-    } catch (err) {
-      console.error("Error during image deletion:", err);
-      return { error: err.message }; // Return error
+    const response = await AccountService.deleteProfilePicture();
+    if (response && "error" in response) {
+      console.error("Failed to delete profile picture:", response.error);
+    } else {
+      console.log("Image deleted successfully:", response);
+      navigate("/set-image"); // Redirect back to the Edit Profile page after deletion
     }
   };
 
@@ -44,5 +42,6 @@ const SetImagePage = () => {
 };
 
 export default SetImagePage;
+
 
 
