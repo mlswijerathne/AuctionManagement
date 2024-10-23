@@ -26,9 +26,9 @@ export default class AccountService {
     }
     static async updateAccount(updateAccountDto) {
         try {
-            console.log("service1");
+            
             const response = await API.post("/api/v1/accounts/me", updateAccountDto);
-            console.log("service2");
+            
             return response.data;
         } catch (error) {
             return {
@@ -54,8 +54,13 @@ export default class AccountService {
 
     static async getProfilePicture() {
         try {
-            const response = await API.get("/api/v1/accounts/me/profilePicture");
-            return response.data;
+            const response = await API.get("/api/v1/accounts/me/profilePicture",{
+                responseType: 'blob' // This ensures the response is treated as a binary large object (Blob)
+        });
+        // Create a URL for the image from the response blob   
+        const imageUrl = URL.createObjectURL(response.data);
+        
+        return imageUrl;// Return the image URL for rendering in the frontend
         } catch (error) {
             return {
                 error: error.response?.data?.message || 
@@ -69,7 +74,7 @@ export default class AccountService {
         try {
             const formData = new FormData();
             if (file) {
-                formData.append('file', file);
+                formData.append('profilePicture', file);
             }
             
             const response = await API.post("/api/v1/accounts/me/profilePicture", formData, {

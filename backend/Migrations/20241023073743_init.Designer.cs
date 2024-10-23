@@ -4,6 +4,7 @@ using DreamBid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023073743_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,13 +212,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9c0d5900-eef2-47ea-ae48-cd94d26bb09e",
+                            Id = "0eb4172c-107d-4e9d-bb42-8cb4dab35714",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a19a4616-0bf5-4831-a0d2-83c5eea616a4",
+                            Id = "7ccd9240-ac2c-4760-b469-42389f267f40",
                             Name = "User",
                             NormalizedName = "USER"
                         });

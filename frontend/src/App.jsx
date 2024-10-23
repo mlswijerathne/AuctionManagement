@@ -13,8 +13,12 @@ import ContactUsPage from './pages/ContactUs';
 import AddAuctionBox from './features/AddAuctionBox';
 import ProfilePage from './pages/Profile';
 import EditProfilePage from './pages/EditProfile';
+// import AddAuctionPage from './pages/AddAuction';
+import SetImagePage from "./pages/SetImagePage";
+import UserDetails from "./pages/UserDetails";
 import AboutUsPage from './pages/AboutUs';
 import DashboardPage from './pages/Dashboard';
+
 
 
 
@@ -31,6 +35,8 @@ const navLinks = [
   {path:"EditProfile", name:"EditProfileBox"},
   {path:"/aboutus", name:"AboutUsBox"},
   {path:"/dashboard",name:"DashboardBox"},
+  {path:"/set-image",name:"SetImageBox"},
+ 
 
  
 
@@ -61,6 +67,8 @@ function App() {
             <Route path="/aboutus" element={<AboutUsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/editprofile" element={<EditProfilePage />} />
+            <Route path="/set-image" element={<SetImagePage />} />
+            <Route path="/user-details" element={<UserDetails />} />
             
           </Routes>
         </Layout>

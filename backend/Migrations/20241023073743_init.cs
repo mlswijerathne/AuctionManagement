@@ -189,13 +189,42 @@ namespace backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Bids",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    BidTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AuctionId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsAutoBid = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bids", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bids_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bids_Auctions_AuctionId",
+                        column: x => x.AuctionId,
+                        principalTable: "Auctions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "a5c10f60-edd1-4b6a-aed3-cbeaa8848440", null, "User", "USER" },
-                    { "c5aa10a0-50d7-494d-b2d5-082bf9848c1a", null, "Admin", "ADMIN" }
+                    { "0eb4172c-107d-4e9d-bb42-8cb4dab35714", null, "Admin", "ADMIN" },
+                    { "7ccd9240-ac2c-4760-b469-42389f267f40", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -241,6 +270,16 @@ namespace backend.Migrations
                 name: "IX_Auctions_UserId",
                 table: "Auctions",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bids_AuctionId",
+                table: "Bids",
+                column: "AuctionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bids_UserId",
+                table: "Bids",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -262,10 +301,13 @@ namespace backend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Auctions");
+                name: "Bids");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Auctions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

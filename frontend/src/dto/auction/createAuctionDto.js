@@ -6,7 +6,7 @@ class CreateAuctionDto {
     startingPrice = "";
     startTime = "";
     endTime = "";
-    imageUrl = "";
+    auctionPicturePath = "";
 
 }
 
@@ -17,7 +17,7 @@ export function validateCreateAuctionDto(createAuctionDto){
         startingPrice: Joi.number().positive().required(),
         startTime: Joi.date().iso().required(),
         endTime: Joi.date().iso().required(),
-        imageUrl: Joi.string().uri().optional()
+        auctionPicturePath: Joi.required()
 
     });
 

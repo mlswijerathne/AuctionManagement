@@ -43,12 +43,11 @@ namespace DreamBid.Controllers
             }
 
             var auction = AuctionMapper.ToAuction(createAuctionDto, userId);
+            _context.Auctions.Add(auction);
+            await _context.SaveChangesAsync();
             //handle photo upload
             if (createAuctionDto.AuctionPicturePath != null && createAuctionDto.AuctionPicturePath.Length > 0)
             {
-                
-                    _context.Auctions.Add(auction);
-                    await _context.SaveChangesAsync();
                     var basepath = FileManagementUtil.GetOsDependentPath($"aution/{auction.Id}");
                     var fileName = $"auction_{Guid.NewGuid()}{Path.GetExtension(createAuctionDto.AuctionPicturePath.FileName)}";
                     var subFilePathName = Path.Combine(basepath, fileName);
@@ -57,6 +56,8 @@ namespace DreamBid.Controllers
                     if (newFilePath != null)
                     {
                         auction.AuctionPicturePath = newFilePath;
+                        _context.Auctions.Update(auction);
+                        await _context.SaveChangesAsync(); 
                     }
                     else
                     {
@@ -81,23 +82,112 @@ namespace DreamBid.Controllers
         public async Task<ActionResult<IEnumerable<AuctionDto>>> GetAuctions()
         {
             var auctions = await _context.Auctions.ToListAsync();
+
+            foreach (var auction in auctions)
+            {
+                if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
+                {
+                    
+                        var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+                        var fileExtension = Path.GetExtension(auction.AuctionPicturePath);
+                        var mimeType = fileExtension.ToLower() switch
+                        {
+                            ".jpg" or ".jpeg" => "image/jpeg",
+                            ".png" => "image/png",
+                            ".gif" => "image/gif",
+                            _ => "application/octet-stream"
+                        };
+                        auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
+   
+                }
+                else{
+                    // Log or handle the error
+                    _logger.LogError("Error loading photo: either file path is empty or file bytes could not be retrieved.");
+                    auction.PhotoData = null;
+                }
+            }
+
             var auctionDtos = AuctionMapper.ToDtoList(auctions);
             return Ok(auctionDtos);
         }
 
         // GET: api/Auction/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AuctionDto>> GetAuction(int id)
+        
+[HttpGet("{id}")]
+public async Task<ActionResult<AuctionDto>> GetAuction(int id)
+{
+    var auction = await _context.Auctions.FindAsync(id);
+
+    if (auction == null)
+    {
+        return NotFound();
+    }
+    
+    // Handle photo retrieval
+    if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
+    {
+        var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+        
+        if (photoBytes == null)
         {
-            var auction = await _context.Auctions.FindAsync(id);
-
-            if (auction == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(AuctionMapper.ToDto(auction));
+            _logger.LogError("Unable to load photo from path: {AuctionPicturePath}", auction.AuctionPicturePath);
+            auction.PhotoData = null;
         }
+        else
+        {
+            var fileExtension = Path.GetExtension(auction.AuctionPicturePath).ToLower();
+            var mimeType = fileExtension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                _ => "application/octet-stream"
+            };
+            auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
+        }
+    }
+    else
+    {
+        _logger.LogWarning("Auction {AuctionId} does not have a picture path.", auction.Id);
+        auction.PhotoData = null;
+    }
+
+    return Ok(AuctionMapper.ToDto(auction));
+}
+
+        // [HttpGet("{id}")]
+        // public async Task<ActionResult<AuctionDto>> GetAuction(int id)
+        // {
+        //     var auction = await _context.Auctions.FindAsync(id);
+
+        //     if (auction == null)
+        //     {
+        //         return NotFound();
+        //     }
+            
+        //     // Handle photo retrieval
+        //     if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
+        //     {
+                
+        //             var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+        //             var fileExtension = Path.GetExtension(auction.AuctionPicturePath);
+        //             var mimeType = fileExtension.ToLower() switch
+        //             {
+        //                 ".jpg" or ".jpeg" => "image/jpeg",
+        //                 ".png" => "image/png",
+        //                 ".gif" => "image/gif",
+        //                 _ => "application/octet-stream"
+        //             };
+        //             auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
+                
+        //     }
+        //     else {
+        //          _logger.LogError("Error loading photo for auction {AuctionId}", auction.Id);
+        //         auction.PhotoData = null;
+        //     }
+
+        //     return Ok(AuctionMapper.ToDto(auction));
+        // }
 
         
 
@@ -124,7 +214,10 @@ namespace DreamBid.Controllers
             {
                 return Forbid();
             }
+             // Update basic auction properties
+            AuctionMapper.UpdateAuction(auction, updateAuctionDto);
 
+             // Handle photo update if provided
             if (updateAuctionDto.AuctionPicturePath != null && updateAuctionDto.AuctionPicturePath.Length > 0)
             {
             
@@ -135,8 +228,8 @@ namespace DreamBid.Controllers
                     }
 
                     // Upload new photo
-                    var fileName = $"auction_{Guid.NewGuid()}{Path.GetExtension(updateAuctionDto.AuctionPicturePath.FileName)}";
-                    var subFilePathName = Path.Combine(_auctionPicturePath, fileName);
+                    var fileName = $"auction_{auction.Id}_{Guid.NewGuid()}{Path.GetExtension(updateAuctionDto.AuctionPicturePath.FileName)}";
+                    var subFilePathName = Path.Combine("auction", auction.Id.ToString(), fileName);
 
                     var newFilePath = await _fileManagerService.StoreFile(updateAuctionDto.AuctionPicturePath, subFilePathName,this._logger, true);
                     if (newFilePath != null)
@@ -150,48 +243,39 @@ namespace DreamBid.Controllers
                 
             }
 
-
-            AuctionMapper.UpdateAuction(auction, updateAuctionDto);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
+            await _context.SaveChangesAsync();
+            
                 if (!AuctionExists(id))
                 {
                     return NotFound();
                 }
-                throw;
-            }
-
-            return NoContent();
+    
+                return NoContent();
         }
 
         [HttpGet("{id}/photo")]
-    public async Task<IActionResult> GetAuctionPhoto(int id)
-    {
-        var auction = await _context.Auctions.FindAsync(id);
-        
-        if (auction == null)
+        public async Task<IActionResult> GetAuctionPhoto(int id)
         {
-            return NotFound();
-        }
+            var auction = await _context.Auctions.FindAsync(id);
+            
+            if (auction == null)
+            {
+                return NotFound();
+            }
 
-        if (string.IsNullOrEmpty(auction.AuctionPicturePath))
-        {
-            return NotFound("No photo available for this auction");
-        }
+            if (string.IsNullOrEmpty(auction.AuctionPicturePath))
+            {
+                return NotFound("No photo available for this auction");
+            }
 
-        var fileBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+            var fileBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
 
-        if (fileBytes == null)
-        {
-            return NotFound("Photo file not found");
-        }
+            if (fileBytes == null)
+            {
+                return NotFound("Photo file not found");
+            }
 
-        return File(fileBytes, MimeTypesMap.GetMimeType(auction.AuctionPicturePath));
+            return File(fileBytes, MimeTypesMap.GetMimeType(auction.AuctionPicturePath));
     }
 
 

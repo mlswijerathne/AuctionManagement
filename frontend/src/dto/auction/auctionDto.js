@@ -5,7 +5,7 @@ class AuctionDto {
     startingPrice = "";
     startTime = "";
     endTime = "";
-    imageUrl = "";
+    photoData = "";
 }
 
 export default AuctionDto;
