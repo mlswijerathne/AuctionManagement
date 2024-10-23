@@ -4,7 +4,7 @@ class UpdateAuctionDto {
     title = "";
     description = "";
     endTime = "";
-    imageUrl = "";
+    auctionPicturePath  = "";
 }
 
 export function validateUpdateAuctionDto(updateAuctionDto) {
@@ -12,7 +12,7 @@ export function validateUpdateAuctionDto(updateAuctionDto) {
         title: Joi.string().optional(),
         description: Joi.string().optional(),
         endTime: Joi.date().iso().optional(),
-        imageUrl: Joi.string().uri().optional()
+        auctionPicturePath: Joi.string().optional()
     });
 
     return schema.validate(updateAuctionDto);

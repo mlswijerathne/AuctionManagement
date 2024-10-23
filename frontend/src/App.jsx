@@ -13,6 +13,7 @@ import ContactUsPage from './pages/ContactUs';
 import AddAuctionBox from './features/AddAuctionBox';
 import ProfilePage from './pages/Profile';
 import EditProfilePage from './pages/EditProfile';
+import AddAuctionPage from './pages/AddAuction';
 import SetImagePage from "./pages/SetImagePage";
 import AboutUsPage from './pages/AboutUs';
 import DashboardPage from './pages/Dashboard';

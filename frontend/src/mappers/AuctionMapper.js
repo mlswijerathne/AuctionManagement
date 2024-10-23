@@ -1,6 +1,6 @@
-import AccountDto from "../dto/account/accountDto";
+import AuctionDto from "../dto/auction/auctionDto";
 
-export default class AuctionMapper{
+export default class AuctionMapper {
 
     static ToAuctionDto(data) {
         let auctionDto = new AuctionDto();
@@ -9,8 +9,12 @@ export default class AuctionMapper{
         auctionDto.startingPrice = data.startingPrice;
         auctionDto.startTime = data.startTime;
         auctionDto.endTime = data.endTime;
-        auctionDto.imageUrl = data.imageUrl;
+        auctionDto.auctionPicturePath = data.auctionPicturePath;
 
         return auctionDto;
+    }
+
+    static ToDtoList(auctions){
+        return auctions.map(auction => this.ToAuctionDto(auction));
     }
 }
