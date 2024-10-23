@@ -61,4 +61,64 @@ export default class AuctionViewModel {
         
         return response;
     }
+
+    
+    static async getMyAuctionsWithPhotos() {
+        try {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                return { error: "User not logged in" };
+            }
+    
+            console.log('Fetching auctions for user:', userId);
+            const response = await AuctionService.getMyAuctions();
+
+            console.log('Response from getMyAuctions:', response);
+            
+            if ("error" in response) {
+                console.error('Error in getMyAuctions:', response.error);
+                return { error: response.error };
+            }
+    
+            if (!Array.isArray(response)) {
+                console.error('Invalid response format:', response);
+                return { error: "Invalid response format from server" };
+            }
+    
+            // Map auctions and fetch photos concurrently
+            const auctionsWithPhotos = await Promise.all(
+                response.map(async (auction) => {
+                    try {
+                        const photoResponse = await AuctionService.getAuctionPhoto(auction.id);
+
+                        if (typeof photoResponse === 'object' && photoResponse !== null && "error" in photoResponse) {
+                            console.error('Error fetching auction photo:', photoResponse.error);
+                            return {
+                                ...AuctionMapper.ToAuctionDto(auction),
+                                photoUrl: null // Handle the error appropriately
+                            };
+                        }
+
+                        const auctionDto = AuctionMapper.ToAuctionDto(auction);
+                        return {
+                            ...auctionDto,
+                            photoUrl: photoResponse // Assuming photoResponse is the URL or valid response
+                        };
+                    } catch (error) {
+                        console.error('Error processing auction:', error);
+                        return {
+                            ...AuctionMapper.ToAuctionDto(auction),
+                            photoUrl: null
+                        };
+                    }
+                })
+            );
+    
+            return auctionsWithPhotos;
+        } catch (error) {
+            console.error('Error in getMyAuctionsWithPhotos:', error);
+            return { error: "Failed to fetch auctions with photos" };
+        }
+    }
+    
 }

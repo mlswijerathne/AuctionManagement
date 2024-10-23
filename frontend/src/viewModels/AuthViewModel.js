@@ -27,6 +27,12 @@ export default class AuthViewModel {
         {
             return ErrorMessage.errorMessageFromString(response.error);
         }
+        
+        // Store user ID in localStorage after successful login
+        if (response.id) {
+            localStorage.setItem('userId', response.id);
+        }
+
         return AccountMapper.ToAccountDto(response);
 
     }
