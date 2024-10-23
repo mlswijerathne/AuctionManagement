@@ -9,8 +9,8 @@ const Navbar = () => {
         <div className="flex items-center">
           <img src="Bid.webp" alt="Bid Auctions Logo" className="h-10 w-auto mr-3" />
           <Link to="/" className="text-3xl font-bold">
-            <span className="text-orange-800">B</span>id
-            <span className="text-orange-700">A</span>uctions
+            <span className="text-orange-500">B</span>id
+            <span className="text-orange-500">A</span>uctions
           </Link>
         </div>
 
@@ -18,7 +18,7 @@ const Navbar = () => {
         <div className="hidden md:flex space-x-6 text-0.8xl font-bold">
           <Link to="/auction" className="hover:text-orange-500">Auctions</Link>
           <Link to="/dashboard" className="hover:text-orange-500">Dashboard</Link>
-          <Link to="/profile" className="hover:text-orange-500">Profile</Link>
+          <Link to="/EditProfile" className="hover:text-orange-500">Profile</Link>
           <Link to="/aboutus" className="hover:text-orange-500">About Us</Link>
           
         </div>
