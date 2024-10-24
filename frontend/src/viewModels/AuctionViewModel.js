@@ -20,7 +20,7 @@ export default class AuctionViewModel {
     }
 
     static async getAllAuctions() {
-        const response = await AuctionService.getAllAuction();
+        const response = await AuctionService.getAuctions();
 
         if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);

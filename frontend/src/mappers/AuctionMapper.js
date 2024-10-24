@@ -4,6 +4,7 @@ export default class AuctionMapper {
 
     static ToAuctionDto(data) {
         let auctionDto = new AuctionDto();
+        auctionDto.id = data.id;
         auctionDto.title = data.title;
         auctionDto.description = data.description;
         auctionDto.startingPrice = data.startingPrice;

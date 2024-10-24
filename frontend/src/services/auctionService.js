@@ -34,7 +34,7 @@ export default class AuctionService {
         try {
             console.log('Fetching auctions');
             const response = await API.get("/api/Auction");
-            console.log('Auctions response:', response);
+            console.log('Auctions response:', response.data);
             return response.data;
         } catch (error) {
             console.error('Auctions fetch error:', {
@@ -102,8 +102,10 @@ export default class AuctionService {
     static async getAuction(id) {
         try {
             const response = await API.get(`/api/Auction/${id}`);
+            console.log('Auction fetch response:', response);
             return response.data;
         } catch (error) {
+            console.error('Error fetching auction:', error);
             return {
                 error: error.response?.data?.message || 
                        error.message || 
@@ -153,20 +155,4 @@ export default class AuctionService {
         }
     }
 
-    static async getAuctionPhoto(auctionId) {
-        console.log('Fetching auction photo for ID:', auctionId); // Debug log
-        try {
-            const response = await API.get(`/api/Auction/${auctionId}/photo`, {
-                responseType: 'blob'
-            });
-            const imageUrl = URL.createObjectURL(response.data);
-            return imageUrl;
-        } catch (error) {
-            return {
-                error: error.response?.data?.message || 
-                       error.message || 
-                       "Failed to fetch auction photo"
-            };
-        }
-    }
 }

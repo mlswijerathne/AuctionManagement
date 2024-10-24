@@ -26,10 +26,14 @@ export default class AccountService {
     }
     static async updateAccount(updateAccountDto) {
         try {
-            
-            const response = await API.post("/api/v1/accounts/me", updateAccountDto);
-            
-            return response.data;
+                // Ensure Content-Type is 'application/json'
+            const response = await API.post("/api/v1/accounts/me", updateAccountDto, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        return response.data;
+        
         } catch (error) {
             return {
                 error: error.response?.data?.message || 
@@ -57,10 +61,16 @@ export default class AccountService {
             const response = await API.get("/api/v1/accounts/me/profilePicture",{
                 responseType: 'blob' // This ensures the response is treated as a binary large object (Blob)
         });
+
+        // Check if the response is empty or invalid
+        if (!response.data || response.data.size === 0) {
+            return { error: "No profile picture found" };
+        }
+
         // Create a URL for the image from the response blob   
         const imageUrl = URL.createObjectURL(response.data);
+        return { imageUrl };  // Return object with imageUrl property
         
-        return imageUrl;// Return the image URL for rendering in the frontend
         } catch (error) {
             return {
                 error: error.response?.data?.message || 
@@ -73,9 +83,8 @@ export default class AccountService {
     static async updateProfilePicture(file) {
         try {
             const formData = new FormData();
-            if (file) {
-                formData.append('profilePicture', file);
-            }
+            formData.append('profilePicture', file);
+            
             
             const response = await API.post("/api/v1/accounts/me/profilePicture", formData, {
                 headers: {

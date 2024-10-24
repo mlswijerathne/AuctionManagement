@@ -19,6 +19,8 @@ import AboutUsPage from './pages/AboutUs';
 import DashboardPage from './pages/Dashboard';
 import AuctionDetailsPage from './pages/AuctionDetails';
 import MyAuctionsPage from './pages/MyAuctions';
+import AllAuctionsPage from './pages/AllAuctions';
+import OwnAuctionEditPage from './pages/OwnAuctionEdit';
 
 
 
@@ -29,13 +31,17 @@ const navLinks = [
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" },
   { path: "/faq", name: "FAQ" },
-  { path: "/auction", name: "AddAuctionBox" },
-  {path:"/profile", name:"ProfileBox"},
-  {path:"EditProfile", name:"EditProfileBox"},
-  {path:"/aboutus", name:"AboutUsBox"},
-  {path:"/dashboard",name:"DashboardBox"},
-  {path:"/setimage",name:"SetImageBox"},
-  { path: "/myauctions", name: "My Auctions" },
+  { path: "/contact-us", name: "Contact Us" },
+  { path: "/addauction", name: "AddAuctionBox" },
+  { path:"/profile", name:"ProfileBox"},
+  { path:"EditProfile", name:"EditProfileBox"},
+  { path:"/aboutus", name:"AboutUsBox"},
+  { path:"/dashboard",name:"DashboardBox"},
+  { path:"/setimage",name:"SetImageBox"},
+  { path: "/myauctions", name: "MyAuctions" },
+  { path : "/auctiondetails", name: "AuctionDetails"}
+ 
+
  
 
  
@@ -67,8 +73,13 @@ function App() {
             <Route path="/aboutus" element={<AboutUsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/editprofile" element={<EditProfilePage />} />
-            <Route path="/set-image" element={<SetImagePage />} />
+            <Route path="/setimage" element={<SetImagePage />} />
             <Route path="/myauctions" element={<MyAuctionsPage />} />
+            <Route path="/auctiondetails/:id" element={<AuctionDetailsPage />} />
+            <Route path="/addauction" element={<AddAuctionPage />} />
+            <Route path="/allAuctions" element={<AllAuctionsPage />} />
+            <Route path="/auctions/edit/:id" element={<OwnAuctionEditPage />} />
+            
             
           </Routes>
         </Layout>
