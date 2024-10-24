@@ -43,99 +43,107 @@ const DashboardBox = ({
   }
 
   return (
-    <Box p={3}>
-      <Box sx={{ '& > :not(style)': { mb: 3 } }}>
-        {/* Overview Stats */}
-        <Card>
-          <CardHeader 
-            title={
-              <Typography variant="h6">
-                Active Auctions
-              </Typography>
-            }
-          />
-          <CardContent>
-            <Typography 
-              variant="h3" 
-              align="center" 
-              gutterBottom
-            >
-              {auctions.length}
-            </Typography>
-            <Button 
-              variant="contained" 
-              fullWidth
-              color="primary"
-              onClick={onCreateAuction}
-            >
-              Create New Auction
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* My Auctions Section */}
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            My Auctions
+    <Box p={3} sx={{ backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)' }}>
+      {/* Overview Stats */}
+      <Card sx={{ borderRadius: '8px', mb: 3, boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}>
+        <CardHeader 
+          title={<Typography variant="h6" sx={{ color: 'black', fontWeight: 'bold' }}>Active Auctions</Typography>}
+        />
+        <CardContent>
+          <Typography 
+            variant="h3" 
+            align="center" 
+            gutterBottom
+            sx={{ color: 'black', fontWeight: 'bold' }}
+          >
+            {auctions.length}
           </Typography>
-          <Grid container spacing={3}>
-            {auctions.map((auction) => (
-              <Grid item xs={12} md={6} lg={4} key={auction.id}>
-                <Card>
-                  {auction.photoUrl && (
-                    <Box
+          <Button 
+            variant="contained" 
+            fullWidth
+            sx={{ 
+              backgroundColor: '#ff8c00', // Orange button color
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#e07b00',
+              },
+              borderRadius: '5px',
+            }}
+            onClick={onCreateAuction}
+          >
+            Create New Auction
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* My Auctions Section */}
+      <Box>
+        <Typography variant="h5" gutterBottom sx={{ color: 'orange', fontWeight: 'bold', textAlign: 'center' }}>
+          My Auctions
+        </Typography>
+        <Grid container spacing={3}>
+          {auctions.map((auction) => (
+            <Grid item xs={12} md={6} lg={4} key={auction.id}>
+              <Card sx={{ borderRadius: '8px', boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)' }}>
+                {auction.photoUrl && (
+                  <Box
+                    sx={{
+                      height: 200,
+                      backgroundImage: `url(${auction.photoUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      borderTopLeftRadius: '8px',
+                      borderTopRightRadius: '8px',
+                    }}
+                    role="img"
+                    aria-label={auction.title}
+                  />
+                )}
+                <CardContent>
+                  <Typography variant="h6" gutterBottom sx={{ color: 'black', fontWeight: 'bold' }}>
+                    {auction.title}
+                  </Typography>
+                  <Typography color="textSecondary" gutterBottom>
+                    {auction.description}
+                  </Typography>
+                  <Box 
+                    display="flex" 
+                    justifyContent="space-between" 
+                    alignItems="center"
+                    mb={2}
+                  >
+                    <Typography variant="h6" sx={{ color: 'black', fontWeight: 'bold' }}>
+                      ${auction.startingPrice}
+                    </Typography>
+                    <Button
+                      variant="contained"
                       sx={{
-                        height: 200,
-                        backgroundImage: `url(${auction.photoUrl})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
+                        backgroundColor: '#ff8c00', // Orange button color
+                        color: 'white',
+                        '&:hover': {
+                          backgroundColor: '#e07b00',
+                        },
+                        borderRadius: '5px',
                       }}
-                      role="img"
-                      aria-label={auction.title}
-                    />
-                  )}
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      {auction.title}
-                    </Typography>
-                    <Typography 
-                      color="textSecondary" 
-                      gutterBottom
+                      onClick={() => onEditAuction(auction.id)}
+                      startIcon={<Edit sx={{ color: 'white' }} />} // White icon
                     >
-                      {auction.description}
+                      Edit
+                    </Button>
+                  </Box>
+                  <Box sx={{ '& > *': { mt: 1 } }}>
+                    <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold' }}>
+                      Starts: {new Date(auction.startTime).toLocaleDateString()}
                     </Typography>
-                    <Box 
-                      display="flex" 
-                      justifyContent="space-between" 
-                      alignItems="center"
-                      mb={2}
-                    >
-                      <Typography variant="h6">
-                        ${auction.startingPrice}
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        color="warning"
-                        onClick={() => onEditAuction(auction.id)}
-                        startIcon={<Edit />}
-                      >
-                        Edit
-                      </Button>
-                    </Box>
-                    <Box sx={{ '& > *': { mt: 1 } }}>
-                      <Typography variant="body2" color="textSecondary">
-                        Starts: {new Date(auction.startTime).toLocaleDateString()}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Ends: {new Date(auction.endTime).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+                    <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold' }}>
+                      Ends: {new Date(auction.endTime).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </Box>
   );

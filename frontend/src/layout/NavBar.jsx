@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Left Side: Logo and Bid Auctions */}
         <div className="flex items-center">
-          <img src="Bid.webp" alt="Bid Auctions Logo" className="h-10 w-auto mr-3" />
+          <img src="Team-Member02.jpeg" alt="Bid Auctions Logo" className="h-10 w-auto mr-3" />
           <Link to="/" className="text-3xl font-bold">
             <span className="text-orange-500">B</span>id
             <span className="text-orange-500">A</span>uctions

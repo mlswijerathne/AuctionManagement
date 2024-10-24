@@ -46,7 +46,12 @@ const OwnAuctionEditBox = ({
     <div className="max-w-2xl mx-auto p-6">
       <Card>
         <CardHeader 
-          title={<Typography variant="h5">Edit Auction</Typography>}
+          title={
+            <Typography variant="h5" sx={{ color: 'black', display: 'flex', alignItems: 'center' }}>
+              <span style={{ color: '#ff8c00' }}>Edit </span>
+              <span>Auction</span>
+            </Typography>
+          }
         />
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-6">
@@ -120,6 +125,13 @@ const OwnAuctionEditBox = ({
                   variant="contained"
                   component="span"
                   startIcon={<PhotoCamera />}
+                  sx={{
+                    backgroundColor: '#ff8c00', // Orange color
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: '#e07b00', // Darker orange on hover
+                    },
+                  }}
                 >
                   Upload Photo
                 </Button>
@@ -136,10 +148,31 @@ const OwnAuctionEditBox = ({
             </FormControl>
 
             <div className="flex justify-end space-x-4">
-              <Button variant="outlined" onClick={onCancel}>
+              <Button 
+                variant="outlined" 
+                onClick={onCancel} 
+                sx={{
+                  borderColor: '#ff8c00', // Orange border color
+                  color: '#ff8c00', // Orange text color
+                  '&:hover': {
+                    borderColor: '#e07b00', // Darker orange on hover
+                    color: '#e07b00', // Darker orange on hover
+                  },
+                }}
+              >
                 Cancel
               </Button>
-              <Button type="submit" variant="contained" color="primary">
+              <Button 
+                type="submit" 
+                variant="contained" 
+                sx={{
+                  backgroundColor: '#ff8c00', // Orange color
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#e07b00', // Darker orange on hover
+                  },
+                }}
+              >
                 Save Changes
               </Button>
             </div>

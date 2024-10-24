@@ -53,10 +53,21 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
         boxShadow: 3,
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
-        {auctionData.title}
+      <Typography 
+        variant="h4" 
+        align="center" 
+        gutterBottom 
+        sx={{
+          color: 'black', // Change title color to black
+          fontWeight: 'bold', // Make the title bold
+          '& span': {
+            color: 'orange', // Add color to a specific part of the title if needed
+          }
+        }}
+      >
+        Car Auction <span>Details</span> {/* You can use <span> to color part of the title */}
       </Typography>
-
+  
       {photoUrl && (
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
           <img
@@ -71,13 +82,13 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
           />
         </Box>
       )}
-
+  
       <Box sx={{ mb: 3 }}>
         <Typography variant="body1" color="text.secondary">
           {auctionData.description}
         </Typography>
       </Box>
-
+  
       <Box sx={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -86,24 +97,24 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
       }}>
         <Box sx={{ flex: 1, minWidth: '250px' }}>
           <AuctionField
-            icon={<MonetizationOnIcon color="primary" />}
+            icon={<MonetizationOnIcon sx={{ color: 'orange' }} />} // Change icon color to orange
             label="Starting Price"
             value={`$${parseFloat(auctionData.startingPrice).toFixed(2)}`}
           />
-
+  
           <AuctionField
-            icon={<AccessTimeIcon color="primary" />}
+            icon={<AccessTimeIcon sx={{ color: 'orange' }} />} // Change icon color to orange
             label="Start Time"
             value={formatDateTime(auctionData.startTime)}
           />
-
+  
           <AuctionField
-            icon={<AccessTimeIcon color="primary" />}
+            icon={<AccessTimeIcon sx={{ color: 'orange' }} />} // Change icon color to orange
             label="End Time"
             value={formatDateTime(auctionData.endTime)}
           />
         </Box>
-
+  
         <Box sx={{ 
           flex: 1, 
           minWidth: '250px', 
@@ -125,13 +136,13 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
               {isAuctionActive() ? 'Active' : 'Inactive'}
             </Typography>
           </Box>
-
+  
           {isAuctionActive() && (
             <Button
               variant="contained"
               sx={{ 
                 mt: 2,
-                backgroundColor: "#ff8c00",
+                backgroundColor: "#ff8c00", // Orange button color
                 color: "white",
                 "&:hover": {
                   backgroundColor: "#e07b00"
@@ -145,6 +156,7 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
       </Box>
     </Box>
   );
+  
 };
 
 export default AuctionDetailsBox;

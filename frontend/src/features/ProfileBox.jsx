@@ -90,37 +90,32 @@ const ProfileBox = ({
         margin: "auto",
         mt: 4,
         p: 3,
-        borderRadius: 2,
-        backgroundColor: "#f3f4f6",
+        borderRadius: 3,
+        backgroundColor: "#ffffff", // Changed to white for a cleaner look
         boxShadow: 3,
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
         Profile
       </Typography>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
         <Box sx={{ position: 'relative', mb: 2 }}>
           <Avatar 
-            alt={formData.firstName} 
+            alt={`${formData.firstName} ${formData.lastName}`} 
             src={profilePicture || "/path/to/default-profile-pic.jpg"}
             sx={{ 
-              width: 100, 
-              height: 100, 
+              width: 120, 
+              height: 120, 
               mb: 2,
-              border: '2px solid #ff8c00'
+              border: '4px solid #ff8c00', // Thicker border for emphasis
+              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)', // Added shadow for depth
             }}
           />
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 1, 
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}>
-            
-          </Box>
         </Box>
-        <Typography variant="h6">{formData.firstName} {formData.lastName}</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#444' }}>
+          {formData.firstName} {formData.lastName}
+        </Typography>
       </Box>
 
       {error && (
@@ -130,7 +125,7 @@ const ProfileBox = ({
       )}
 
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <ProfileField label="UserName" value={formData.userName} />
+        <ProfileField label="Username" value={formData.userName} />
         <ProfileField label="Email" value={formData.email} />
         <ProfileField label="First Name" value={formData.firstName} />
         <ProfileField label="Last Name" value={formData.lastName} />
@@ -146,8 +141,11 @@ const ProfileBox = ({
             backgroundColor: "#ff8c00",
             color: "white",
             "&:hover": {
-              backgroundColor: "#e07b00"
-            }
+              backgroundColor: "#e07b00",
+            },
+            padding: '10px 20px',
+            borderRadius: '5px',
+            fontWeight: 'bold',
           }}
         >
           Edit Profile
