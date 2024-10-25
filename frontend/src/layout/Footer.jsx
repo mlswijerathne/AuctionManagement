@@ -10,7 +10,7 @@ import {
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-5">
-      <div className="container mx-auto grid md:grid-cols-4 gap-8">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Column 1 - Company Info */}
         <div className="space-y-4">
           <h4 className="text-orange-400 text-lg font-semibold">BiD aUCTION</h4>
@@ -112,16 +112,33 @@ const Footer = () => {
           </h4>
           <ul className="space-y-2">
             <li>
-            <a href="/terms" className="text-gray-400 hover:text-orange-500 transition duration-200">Terms of Service</a>
+              <a
+                href="/terms"
+                className="text-gray-400 hover:text-orange-500 transition duration-200"
+              >
+                Terms of Service
+              </a>
             </li>
             <li>
-              <a href="/privacy" className="text-gray-400 hover:text-orange-500 transition duration-200">Privacy Policy</a>
-              </li>
-              <li><a href="/contact" className="text-gray-400 hover:text-orange-500 transition duration-200">Contact Us</a></li>
+              <a
+                href="/privacy"
+                className="text-gray-400 hover:text-orange-500 transition duration-200"
+              >
+                Privacy Policy
+              </a>
+            </li>
+            <li>
+              <a
+                href="/contact"
+                className="text-gray-400 hover:text-orange-500 transition duration-200"
+              >
+                Contact Us
+              </a>
+            </li>
           </ul>
         </div>
 
-        {/* Column 4 - other link page */}
+        {/* Column 4 - Other Connect Page */}
         <div>
           <h4 className="text-orange-400 text-lg font-semibold mb-4">
             Other Connect Page
