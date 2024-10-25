@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button, Avatar } from "@mui/material";
+import { Box, Typography, TextField, Button, Avatar,Divider } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -86,58 +86,94 @@ const ProfileBox = ({
   return (
     <Box
       sx={{
-        maxWidth: 600,
+        maxWidth: 800,
         margin: "auto",
         mt: 4,
         p: 3,
-        borderRadius: 3,
-        backgroundColor: "#ffffff", // Changed to white for a cleaner look
+        borderRadius: 2,
+        backgroundColor: "#ffffff",
         boxShadow: 3,
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
-        Profile
+      {/* My Profile Header */}
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: 'bold',
+          textAlign: 'center',
+          mb: 4,
+          color: 'black', // Orange color for header
+        }}
+      >
+        My Profile
       </Typography>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
-        <Box sx={{ position: 'relative', mb: 2 }}>
-          <Avatar 
-            alt={`${formData.firstName} ${formData.lastName}`} 
-            src={profilePicture || "/path/to/default-profile-pic.jpg"}
-            sx={{ 
-              width: 120, 
-              height: 120, 
-              mb: 2,
-              border: '4px solid #ff8c00', // Thicker border for emphasis
-              boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)', // Added shadow for depth
-            }}
-          />
+      {/* Profile Header */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+        <Avatar
+          alt={`${formData.firstName} ${formData.lastName}`}
+          src={profilePicture || "/path/to/default-profile-pic.jpg"}
+          sx={{
+            width: 100,
+            height: 100,
+            mr: 3,
+            border: '4px solid #ff8c00',
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+          }}
+        />
+        <Box>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#000' }}>
+            {formData.firstName} {formData.lastName}
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#777' }}>
+            {formData.userName}
+          </Typography>
+          <Typography variant="body2" sx={{ color: '#888' }}>
+            {formData.email}
+          </Typography>
         </Box>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#444' }}>
-          {formData.firstName} {formData.lastName}
-        </Typography>
       </Box>
 
+      {/* Divider */}
+      <Divider sx={{ mb: 3 }} />
+
+      {/* Profile Information - Same Line Format */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <Box sx={{ display: 'flex', mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#555', width: '150px' }}>First Name:</Typography>
+          <Typography variant="body1" sx={{ color: '#333' }}>{formData.firstName}</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#555', width: '150px' }}>Last Name:</Typography>
+          <Typography variant="body1" sx={{ color: '#333' }}>{formData.lastName}</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#555', width: '150px' }}>Birthday:</Typography>
+          <Typography variant="body1" sx={{ color: '#333' }}>{formData.DOB}</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#555', width: '150px' }}>Contact Number:</Typography>
+          <Typography variant="body1" sx={{ color: '#333' }}>{formData.contactNumber}</Typography>
+        </Box>
+        <Box sx={{ display: 'flex', mb: 1 }}>
+          <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#555', width: '150px' }}>Address:</Typography>
+          <Typography variant="body1" sx={{ color: '#333' }}>{formData.address}</Typography>
+        </Box>
+      </Box>
+
+      {/* Error Message */}
       {error && (
         <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
           {error}
         </Typography>
       )}
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <ProfileField label="Username" value={formData.userName} />
-        <ProfileField label="Email" value={formData.email} />
-        <ProfileField label="First Name" value={formData.firstName} />
-        <ProfileField label="Last Name" value={formData.lastName} />
-        <ProfileField label="Birthday" value={formData.DOB} />
-        <ProfileField label="Contact Number" value={formData.contactNumber} />
-        <ProfileField label="Address" value={formData.address} />
-
+      {/* Edit Profile Button */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
         <Button
           onClick={() => navigate("/editprofile")}
           variant="contained"
-          sx={{ 
-            mt: 3, 
+          sx={{
             backgroundColor: "#ff8c00",
             color: "white",
             "&:hover": {

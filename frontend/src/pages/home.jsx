@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 const Home = () => {
   return (
-    <Box sx={{ backgroundColor: '#f7f7f7', minHeight: '100vh', padding: 2 }}>
+    <Box sx={{ backgroundColor: '#f7f7f7', minHeight: '100vh', padding:0 }}>
       <HomeBox />
       {/* You can add more components here for additional sections on the home page */}
     </Box>
