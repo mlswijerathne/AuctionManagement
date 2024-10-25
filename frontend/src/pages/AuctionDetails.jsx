@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, CircularProgress, Alert } from "@mui/material";
+import { Box, CircularProgress, Alert, Container } from "@mui/material";
 import AuctionViewModel from "../viewModels/AuctionViewModel";
 import AuctionService from "../services/auctionService";
 import AuctionDetailsBox from "../features/AuctionDetailsBox";
@@ -16,22 +16,19 @@ const AuctionDetailsPage = () => {
     const fetchAuctionDetails = async () => {
       try {
         setLoading(true);
-        setError(null); // Reset error state
+        setError(null);
 
         const response = await AuctionViewModel.getAuction(id);
         
         console.log('Auction data response:', response);
 
-        // Check if response is an error object from ErrorMessage class
         if (response && typeof response === 'object' && 'error' in response) {
           setError(response.error);
           return;
         }
 
-        // If we get here, we have valid auction data
         setAuctionData(response);
         
-        // Only fetch photo if we have valid auction data
         try {
           const photoResponse = await AuctionService.getAuctionPhoto(id);
           if (photoResponse && typeof photoResponse === 'string') {
@@ -39,7 +36,6 @@ const AuctionDetailsPage = () => {
           }
         } catch (photoErr) {
           console.warn('Failed to fetch photo:', photoErr);
-          // Don't set error state for photo failure
         }
 
       } catch (err) {
@@ -60,25 +56,49 @@ const AuctionDetailsPage = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-        <CircularProgress />
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '80vh'
+        }}
+      >
+        <CircularProgress sx={{ color: '#ff8c00' }} />
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ maxWidth: 600, margin: "auto", mt: 4 }}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert 
+          severity="error"
+          sx={{
+            borderRadius: '12px',
+            '& .MuiAlert-icon': {
+              color: '#ff3d00'
+            }
+          }}
+        >
+          {error}
+        </Alert>
+      </Container>
     );
   }
 
   if (!auctionData) {
     return (
-      <Box sx={{ maxWidth: 600, margin: "auto", mt: 4 }}>
-        <Alert severity="info">No auction data available</Alert>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert 
+          severity="info"
+          sx={{
+            borderRadius: '12px'
+          }}
+        >
+          No auction data available
+        </Alert>
+      </Container>
     );
   }
 

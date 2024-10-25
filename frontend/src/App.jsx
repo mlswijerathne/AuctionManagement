@@ -21,6 +21,8 @@ import AuctionDetailsPage from './pages/AuctionDetails';
 import MyAuctionsPage from './pages/MyAuctions';
 import AllAuctionsPage from './pages/AllAuctions';
 import OwnAuctionEditPage from './pages/OwnAuctionEdit';
+import BidSectionPage from './pages/BidSection';
+import AuctionDetailsBox from './features/AuctionDetailsBox';
 
 
 
@@ -39,7 +41,9 @@ const navLinks = [
   { path:"/dashboard",name:"DashboardBox"},
   { path:"/setimage",name:"SetImageBox"},
   { path: "/myauctions", name: "MyAuctions" },
-  { path : "/auctiondetails", name: "AuctionDetails"}
+  { path : "/auctiondetails", name: "AuctionDetails"},
+  { path : "/allauctions" , name: "AllAuctions"},
+  { path : "/bidsection", name: "BidSection" }
  
 
  
@@ -79,6 +83,9 @@ function App() {
             <Route path="/addauction" element={<AddAuctionPage />} />
             <Route path="/allAuctions" element={<AllAuctionsPage />} />
             <Route path="/auctions/edit/:id" element={<OwnAuctionEditPage />} />
+            <Route path="/bidsection" element={<BidSectionPage />} />
+            <Route path="/auction/:auctionId" element={<AuctionDetailsBox />} />
+            <Route path="/bid/:auctionId" element={<BidSectionPage />} />
             
             
           </Routes>

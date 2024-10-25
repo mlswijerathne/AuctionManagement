@@ -1,4 +1,3 @@
-import { Api } from "@mui/icons-material";
 import AuctionMapper from "../mappers/AuctionMapper";
 import AuctionService from "../services/auctionService";
 import ErrorMessage from "./ErrorViewModel";
@@ -7,16 +6,30 @@ import { validateUpdateAuctionDto } from "../dto/auction/updateAuctionDto";
 
 export default class AuctionViewModel {
     static async addAuction(auctionDto) {
-        const error = validateCreateAuctionDto(auctionDto);
+        try {
+            console.log("=== AuctionViewModel - Starting validation ===");
+            console.log("DTO to validate:", auctionDto);
 
-        if (error)
-            return ErrorMessage.errorMessageFromJoiError(error);
+            const validationError = validateCreateAuctionDto(auctionDto);
+            
+            if (validationError) {
+                console.log("=== Validation failed ===", validationError);
+                return ErrorMessage.errorMessageFromJoiError(validationError);
+            }
 
-        const response = await AuctionService.addAuction(auctionDto);
-        if ("error" in response) {
-            return ErrorMessage.errorMessageFromString(response.error);
+            console.log("=== Validation passed, calling service ===");
+            const response = await AuctionService.addAuction(auctionDto);
+            
+            console.log("=== Service response ===", response);
+            if ("error" in response) {
+                return ErrorMessage.errorMessageFromString(response.error);
+            }
+
+            return AuctionMapper.ToAuctionDto(response);
+        } catch (error) {
+            console.error("=== Unexpected error in AuctionViewModel ===", error);
+            return ErrorMessage.errorMessageFromString(error.message);
         }
-        return AuctionMapper.ToAuctionDto(response);
     }
 
     static async getAllAuctions() {
@@ -30,27 +43,90 @@ export default class AuctionViewModel {
     }
 
     static async getAuction(id) {
-        const response = await AuctionService.getAuction(id);
-
-        if ("error" in response) {
-            return ErrorMessage.errorMessageFromString(response.error);
+        try {
+            console.log('ViewModel: Fetching auction with ID:', id);
+            
+            const response = await AuctionService.getAuction(id);
+            console.log('ViewModel: Raw service response:', response);
+    
+            if ("error" in response) {
+                console.error('ViewModel: Error detected:', response);
+                return {
+                    error: response.error,
+                    details: response.details
+                };
+            }
+    
+            // Validate required fields before mapping
+            if (!response.id || !response.title) {
+                console.error('ViewModel: Invalid auction data:', response);
+                return {
+                    error: 'Invalid auction data received',
+                    details: { missingFields: ['id', 'title'].filter(f => !response[f]) }
+                };
+            }
+    
+            const mappedData = AuctionMapper.ToAuctionDto(response);
+            console.log('ViewModel: Mapped data:', mappedData);
+            
+            return mappedData;
+        } catch (error) {
+            console.error('ViewModel: Unexpected error:', error);
+            return {
+                error: 'An unexpected error occurred',
+                details: { message: error.message, stack: error.stack }
+            };
         }
-
-        return AuctionMapper.ToAuctionDto(response);
     }
 
+
+    
     static async updateAuction(id, updateAuctionDto) {
-        const error = validateUpdateAuctionDto(updateAuctionDto);
-
-        if (error)
+        try {
+          console.log('ViewModel: Starting auction update for ID:', id);
+          
+          // Skip Joi validation for FormData
+          if (updateAuctionDto instanceof FormData) {
+            console.log('ViewModel: Using FormData, skipping Joi validation');
+            const response = await AuctionService.updateAuction(id, updateAuctionDto);
+            
+            if ("error" in response) {
+              console.error('ViewModel: Service returned error:', response);
+              return {
+                error: response.error,
+                details: response.details
+              };
+            }
+            
+            return AuctionMapper.ToAuctionDto(response);
+          }
+          
+          // Regular validation for non-FormData
+          const error = validateUpdateAuctionDto(updateAuctionDto);
+          if (error) {
+            console.error('ViewModel: Validation error:', error);
             return ErrorMessage.errorMessageFromJoiError(error);
-
-        const response = await AuctionService.updateAuction(id, updateAuctionDto);
-        if ("error" in response) {
+          }
+      
+          const response = await AuctionService.updateAuction(id, updateAuctionDto);
+          console.log('ViewModel: Service response:', response);
+          
+          if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
+          }
+          
+          return AuctionMapper.ToAuctionDto(response);
+        } catch (error) {
+          console.error('ViewModel: Unexpected error:', error);
+          return {
+            error: 'An unexpected error occurred during update',
+            details: error.message
+          };
         }
-        return AuctionMapper.ToAuctionDto(response);
-    }
+      }
+
+
+
 
     static async deleteAuction(id) {
         const response = await AuctionService.deleteAuction(id);

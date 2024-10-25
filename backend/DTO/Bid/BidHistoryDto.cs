@@ -6,5 +6,10 @@ namespace DreamBid.Dtos.Bid
         public List<BidDto> Bids { get; set; }
         public decimal HighestBidAmount { get; set; }
         public int TotalBids { get; set; }
+        
+        public DateTime BidTime { get; set; }
+        public string UserId { get; set; }
+
+
     }
 }

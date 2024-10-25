@@ -39,7 +39,9 @@ namespace DreamBid.Mappers
                 AuctionId = bids.FirstOrDefault()?.AuctionId ?? 0,
                 Bids = bidDtos,
                 HighestBidAmount = bidDtos.Any() ? bidDtos.Max(b => b.Amount) : 0,
-                TotalBids = bidDtos.Count
+                TotalBids = bidDtos.Count,
+                BidTime = DateTime.UtcNow,
+                UserId = bids.FirstOrDefault()?.UserId ?? ""
             };
         }
     }

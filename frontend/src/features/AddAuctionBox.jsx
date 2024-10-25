@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, TextField, Typography, Alert } from "@mui/material";
 
-const AddAuctionBox = () => {
+const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -42,14 +42,8 @@ const AddAuctionBox = () => {
         return true;
     };
 
-    const handleSubmit = async (formDataToSubmit) => {
-      // Replace this with your actual API call
-      console.log("Form data to submit:", formDataToSubmit);
-      // Simulate an API request
-      return new Promise((resolve) => setTimeout(resolve, 2000));
-    };
 
-    const onSubmit = async (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         console.log('Form submission started');
 
@@ -63,12 +57,13 @@ const AddAuctionBox = () => {
             formDataToSubmit.append("title", formData.title);
             formDataToSubmit.append("description", formData.description);
             formDataToSubmit.append("startingPrice", formData.startingPrice);
-            formDataToSubmit.append("startTime", formData.startingTime);
+            formDataToSubmit.append("startingTime", formData.startingTime);
             formDataToSubmit.append("endTime", formData.endTime);
             formDataToSubmit.append("auctionPicturePath", formData.auctionPicturePath);
 
             console.log('Submitting form data...');
-            await handleSubmit(formDataToSubmit);
+            // Call the parent component's onSubmit function
+            await onSubmit(formDataToSubmit);
             console.log('Form submitted successfully');
 
             // Reset form
@@ -91,7 +86,7 @@ const AddAuctionBox = () => {
     return (
         <Box
             component="form"
-            onSubmit={onSubmit}
+            onSubmit={handleFormSubmit}
             sx={{
                 mt: 2,
                 p: 3,

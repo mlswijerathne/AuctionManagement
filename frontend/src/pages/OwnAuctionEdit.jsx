@@ -22,28 +22,49 @@ const OwnAuctionEditPage = () => {
   useEffect(() => {
     const fetchAuction = async () => {
       try {
-        const response = await AuctionViewModel.getAuction(id);
-        
-        if (!response || response.error) {
-          throw new Error(response?.error || 'Failed to fetch auction details');
-        }
-
-        setAuction(response);
-        setFormData({
-          title: response.title || '',
-          description: response.description || '',
-          endTime: response.endTime ? new Date(response.endTime).toISOString().split('T')[0] : '',
-          auctionPicturePath: response.auctionPicturePath || ''
-        });
-        if (response.photoUrl) {
-          setPreviewImage(response.photoUrl);
-        }
+          console.log('Component: Fetching auction:', id);
+          const response = await AuctionViewModel.getAuction(id);
+          console.log('Component: ViewModel response:', response);
+          
+          if (response?.error) {
+              console.error('Component: Error from ViewModel:', response);
+              throw new Error(
+                  response.details?.message || 
+                  response.error || 
+                  'Failed to fetch auction details'
+              );
+          }
+  
+          // Validate required fields
+          if (!response.title) {
+              throw new Error('Invalid auction data: Missing required fields');
+          }
+  
+          setAuction(response);
+          setFormData({
+              title: response.title || '',
+              description: response.description || '',
+              endTime: response.endTime ? 
+                       new Date(response.endTime).toISOString().split('T')[0] : 
+                       '',
+              auctionPicturePath: response.auctionPicturePath || ''
+          });
+  
+          if (response.photoUrl) {
+              setPreviewImage(response.photoUrl);
+          }
       } catch (error) {
-        setError(error.message || 'Failed to fetch auction details');
-        console.error('Error fetching auction details:', error);
+          const errorMessage = error.message || 'Failed to fetch auction details';
+          console.error('Component: Error in fetchAuction:', {
+              error,
+              message: errorMessage,
+              stack: error.stack
+          });
+          setError(errorMessage);
       } finally {
-        setLoading(false);
+          setLoading(false);
       }
+  
     };
 
     fetchAuction();
@@ -84,8 +105,18 @@ const OwnAuctionEditPage = () => {
         return;
       }
 
-      // Create FormData for submission
+      // Create FormData
       const submitData = new FormData();
+       // Log the data being sent
+      console.log('Form data before submission:', {
+        title: formData.title,
+        description: formData.description,
+        endTime: formData.endTime,
+        hasImage: !!imageFile,
+        auctionPicturePath: formData.auctionPicturePath
+      });
+
+      // Append data to FormData
       submitData.append('title', formData.title.trim());
       submitData.append('description', formData.description?.trim() || '');
       submitData.append('endTime', formData.endTime);
@@ -96,31 +127,18 @@ const OwnAuctionEditPage = () => {
         submitData.append('auctionPicturePath', formData.auctionPicturePath);
       }
 
-      // Add auction ID to the form data
-      submitData.append('id', id);
-
+      console.log('Submitting update for auction:', id);
       const response = await AuctionViewModel.updateAuction(id, submitData);
+      console.log('Update response:', response);
 
       if (response?.error) {
-        // Handle structured error response
-        if (typeof response.error === 'object' && response.error.details) {
-          const errorMessage = response.error.details
-            .map(detail => detail.message)
-            .join(', ');
-          setError(errorMessage);
-        } else {
-          setError(response.error.toString());
-        }
-        return;
+        throw new Error(response.error);
       }
-
-      if (!response || !response.success) {
-        throw new Error('Failed to update auction');
-      }
-
+  
+      console.log('Update successful, navigating to dashboard');
       navigate('/dashboard');
     } catch (error) {
-      console.error('Error updating auction:', error);
+      console.error('Error during update:', error);
       setError(error.message || 'Failed to update auction. Please try again.');
     }
   };
