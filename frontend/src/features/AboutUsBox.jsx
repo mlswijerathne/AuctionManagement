@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, Button, Grid } from "@mui/material";
+import { Box, Typography, Button, Grid, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const AboutUsBox = () => {
   return (
@@ -93,7 +94,7 @@ const AboutUsBox = () => {
           />
         </Box>
 
-        {/* Our Team Section */}
+        {/* Settings & Helps */}
         <Box
           sx={{
             maxWidth: 800,
@@ -106,137 +107,42 @@ const AboutUsBox = () => {
           }}
         >
           <Typography variant="h5" gutterBottom>
-            Meet Our Team Member
+            Settings & Helps
           </Typography>
           <Grid container spacing={4}>
-            {/* Team Member 1 */}
-            <Grid item xs={12} md={4}>
-              <img
-                src="Team-Member01.jpeg"
-                alt="K.R.I.Silva"
-                style={{ width: '100%', borderRadius: '50%', marginBottom: '10px' }}
-              />
-              <Typography align="center" variant="subtitle1" fontWeight="bold">
-                K.R.I.Silva
-              </Typography>
-              <Typography align="center" variant="body2">
-                BSc(Honours) in Computer Science
-              </Typography>
-              <Typography align="center" variant="body2">
-                28356
-              </Typography>
-              <Typography align="center" variant="body2">
-                Front-End Developer
-              </Typography>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>Settings</Typography>
+              <List>
+                <ListItem component={Link} to="/account-settings">
+                  <ListItemText primary="Account Settings" />
+                </ListItem>
+                <Divider />
+                <ListItem component={Link} to="/privacy-settings">
+                  <ListItemText primary="Privacy Settings" />
+                </ListItem>
+                <Divider />
+                <ListItem component={Link} to="/notification-preferences">
+                  <ListItemText primary="Notification Preferences" />
+                </ListItem>
+                <Divider />
+              </List>
             </Grid>
-
-            {/* Team Member 2 */}
-            <Grid item xs={12} md={4}>
-              <img
-                src="Team-Member02.jpeg"
-                alt="A.S.David"
-                style={{ width: '100%', borderRadius: '50%', marginBottom: '10px' }}
-              />
-              <Typography align="center" variant="subtitle1" fontWeight="bold">
-                KMLS Wijerathne
-              </Typography>
-              <Typography align="center" variant="body2">
-                BSc(Honours) in Computer Science
-              </Typography>
-              <Typography align="center" variant="body2">
-                28576
-              </Typography>
-              <Typography align="center" variant="body2">
-                Front-End Developer
-              </Typography>
-              <Typography align="center" variant="body2">
-                Back-End Developer
-              </Typography>
-              <Typography align="center" variant="body2"> (API / Back-End(C#))</Typography>
-              
-            </Grid>
-
-            {/* Team Member 3 */}
-            <Grid item xs={12} md={4}>
-              <img
-                src="Team-Member03.jpeg"
-                alt="L.N.John"
-                style={{ width: '100%', borderRadius: '50%', marginBottom: '10px' }}
-              />
-              <Typography align="center" variant="subtitle1" fontWeight="bold">
-                L.N.John
-              </Typography>
-              <Typography align="center" variant="body2">
-                BSc(Honours) in Software Engineering
-              </Typography>
-              <Typography align="center" variant="body2">
-                28358
-              </Typography>
-              <Typography align="center" variant="body2">
-                UI/UX Designer
-              </Typography>
-            </Grid>
-
-            {/* Team Member 4 */}
-            <Grid item xs={12} md={4}>
-              <img
-                src="Team-Member04.jpeg"
-                alt="M.A.Raj"
-                style={{ width: '100%', borderRadius: '50%', marginBottom: '10px' }}
-              />
-              <Typography align="center" variant="subtitle1" fontWeight="bold">
-                M.A.Raj
-              </Typography>
-              <Typography align="center" variant="body2">
-                BSc(Honours) in Data Science
-              </Typography>
-              <Typography align="center" variant="body2">
-                28359
-              </Typography>
-              <Typography align="center" variant="body2">
-                Data Analyst
-              </Typography>
-            </Grid>
-             {/* Team Member 5 */}
-             <Grid item xs={12} md={4}>
-              <img
-                src="Team-Member04.jpeg"
-                alt="M.A.Raj"
-                style={{ width: '100%', borderRadius: '50%', marginBottom: '10px' }}
-              />
-              <Typography align="center" variant="subtitle1" fontWeight="bold">
-                M.A.Raj
-              </Typography>
-              <Typography align="center" variant="body2">
-                BSc(Honours) in Data Science
-              </Typography>
-              <Typography align="center" variant="body2">
-                28359
-              </Typography>
-              <Typography align="center" variant="body2">
-                Data Analyst
-              </Typography>
-            </Grid>
-
-            {/* Team Member 6 */}
-            <Grid item xs={12} md={4}>
-              <img
-                src="Team-Member05.jpeg"
-                alt="S.P.Rani"
-                style={{ width: '100%', borderRadius: '50%', marginBottom: '10px' }}
-              />
-              <Typography align="center" variant="subtitle1" fontWeight="bold">
-                S.P.Rani
-              </Typography>
-              <Typography align="center" variant="body2">
-                BSc(Honours) in Business Administration
-              </Typography>
-              <Typography align="center" variant="body2">
-                28360
-              </Typography>
-              <Typography align="center" variant="body2">
-                Marketing Specialist
-              </Typography>
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>Help & Support</Typography>
+              <List>
+                <ListItem component={Link} to="/faqs">
+                  <ListItemText primary="FAQs" />
+                </ListItem>
+                <Divider />
+                <ListItem component={Link} to="/contact-support">
+                  <ListItemText primary="Contact Support" />
+                </ListItem>
+                <Divider />
+                <ListItem component={Link} to="/user-guide">
+                  <ListItemText primary="User Guide" />
+                </ListItem>
+                <Divider />
+              </List>
             </Grid>
           </Grid>
         </Box>

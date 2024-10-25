@@ -29,6 +29,8 @@
     "react-icon": "^1.0.0",
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
     "tailwindcss": "^3.4.10",
     "web-vitals": "^2.1.4"
   },
