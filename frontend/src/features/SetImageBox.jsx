@@ -6,7 +6,9 @@ import AccountService from "../services/accountService"; // Import the AccountSe
 
 const SetImageBox = ({ handleImageUpload, handleImageDelete }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null); // For image preview
   const [error, setError] = useState("");
+  
   
 
   // Fetch the existing profile picture when the component mounts
@@ -29,7 +31,8 @@ const SetImageBox = ({ handleImageUpload, handleImageDelete }) => {
       // Check if the selected file is an image
       const isValidImage = file.type.startsWith("image/");
       if (isValidImage) {
-        setSelectedImage(URL.createObjectURL(file)); // Preview image
+        setSelectedImage(file); // Store the file object
+        setPreviewUrl(URL.createObjectURL(file)); // Create preview URL
         setError(""); // Clear any previous error
       } else {
         setError("Please select a valid image file.");
@@ -42,7 +45,7 @@ const SetImageBox = ({ handleImageUpload, handleImageDelete }) => {
     if (selectedImage) {
       const formData = new FormData();
       formData.append("profilePicture", selectedImage); // Append the image file
-      await handleImageUpload(formData); // Pass formData to the parent component for uploading
+      await handleImageUpload(selectedImage); // Pass formData to the parent component for uploading
     } else {
       setError("Please select an image to upload.");
     }

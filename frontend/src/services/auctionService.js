@@ -1,4 +1,5 @@
 import API from "./api";
+import AuthService from "./authService";
 
 export default class AuctionService {
     static async addAuction(createAuctionDto) {
@@ -33,7 +34,7 @@ export default class AuctionService {
         try {
             console.log('Fetching auctions');
             const response = await API.get("/api/Auction");
-            console.log('Auctions response:', response);
+            console.log('Auctions response:', response.data);
             return response.data;
         } catch (error) {
             console.error('Auctions fetch error:', {
@@ -49,11 +50,62 @@ export default class AuctionService {
         }
     }
 
+    static async getMyAuctions() {
+        try {
+            const userId = localStorage.getItem('userId');
+            console.log('Fetching auctions for user:', userId);
+
+            const response = await API.get("/api/Auction/my");
+            console.log('Auctions response:', response.data);
+
+            return response.data;
+        } catch (error) {
+            console.error('Error in getMyAuctions:', error);
+            return {
+                error: error.response?.data?.message || 
+                       error.message || 
+                       "Failed to fetch auctions"
+            };
+        }
+    }
+
+    static async getAuctionPhoto(auctionId) {
+        try {
+            console.log('Fetching photo for auction:', auctionId);
+            if (!auctionId) {
+                throw new Error('Invalid auction ID');
+            }
+
+            const response = await API.get(`/api/Auction/${auctionId}/photo`, {
+                responseType: 'blob',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token if you're using JWT
+                }
+            });
+
+            if (!response.data) {
+                throw new Error('No photo data received');
+            }
+
+            console.log('Photo fetched successfully for auction:', auctionId);
+            return URL.createObjectURL(response.data);
+        } catch (error) {
+            console.error('Error fetching auction photo:', error);
+            return {
+                error: error.response?.data?.message || 
+                       error.message || 
+                       `Failed to fetch photo for auction ${auctionId}`
+            };
+        }
+    }
+
     static async getAuction(id) {
         try {
             const response = await API.get(`/api/Auction/${id}`);
+            console.log('Auction fetch response:', response);
             return response.data;
         } catch (error) {
+            console.error('Error fetching auction:', error);
             return {
                 error: error.response?.data?.message || 
                        error.message || 
@@ -103,19 +155,4 @@ export default class AuctionService {
         }
     }
 
-    static async getAuctionPhoto(id) {
-        try {
-            const response = await API.get(`/api/Auction/${id}/photo`, {
-                responseType: 'blob'
-            });
-            const imageUrl = URL.createObjectURL(response.data);
-            return imageUrl;
-        } catch (error) {
-            return {
-                error: error.response?.data?.message || 
-                       error.message || 
-                       "Failed to fetch auction photo"
-            };
-        }
-    }
 }

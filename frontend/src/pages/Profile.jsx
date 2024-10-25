@@ -5,19 +5,26 @@ import ProfileBox from "../features/ProfileBox";
 
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        // Fetch profile data
         const response = await AccountViewModel.getAccount();
-        // Check if response exists and has an error property
         if (response && response.error) {
           setError(response.error);
         } else if (response) {
           setProfileData(response);
         } else {
           setError("Failed to fetch profile data");
+        }
+
+        // Fetch profile picture
+        const pictureResponse = await AccountViewModel.getProfilePicture();
+        if (pictureResponse && !pictureResponse.error) {
+          setProfilePicture(pictureResponse);
         }
       } catch (error) {
         setError(error.message || "An error occurred while fetching profile");
@@ -54,6 +61,37 @@ const ProfilePage = () => {
     }
   };
 
+
+  const handleUpdateProfilePicture = async (file) => {
+    try {
+      const response = await AccountViewModel.updateProfilePicture(file);
+      if (response && response.error) {
+        throw new Error(response.error);
+      }
+      // Refresh the profile picture
+      const newPictureResponse = await AccountViewModel.getProfilePicture();
+      if (newPictureResponse && !newPictureResponse.error) {
+        setProfilePicture(newPictureResponse);
+      }
+    } catch (error) {
+      throw new Error(error.message || "Failed to update profile picture");
+    }
+  };
+
+  const handleDeleteProfilePicture = async () => {
+    try {
+      const response = await AccountViewModel.deleteProfilePicture();
+      if (response && response.error) {
+        throw new Error(response.error);
+      }
+      setProfilePicture(null);
+    } catch (error) {
+      throw new Error(error.message || "Failed to delete profile picture");
+    }
+  };
+
+
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -62,7 +100,15 @@ const ProfilePage = () => {
     return <div>Loading...</div>;
   }
 
-  return <ProfileBox handleSubmit={handleSubmit} profileData={profileData} />;
+  return (
+    <ProfileBox 
+      handleSubmit={handleSubmit} 
+      profileData={profileData} 
+      profilePicture={profilePicture}
+      onUpdateProfilePicture={handleUpdateProfilePicture}
+      onDeleteProfilePicture={handleDeleteProfilePicture}
+    />
+  );
 };
 
 export default ProfilePage;

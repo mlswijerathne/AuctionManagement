@@ -43,7 +43,7 @@ const EditProfileBox = ({ handleSubmit, profileData }) => {
         console.log("from edit profile box");
         console.log("Update successful:", result);
         setError("");
-        navigate("/user-details"); // Navigate to the user details page after successful update
+        navigate("/profile"); // Navigate to the user details page after successful update
       } catch (err) {
         setError(err.message || "Update failed. Please try again.");
       } finally {
@@ -58,7 +58,7 @@ const EditProfileBox = ({ handleSubmit, profileData }) => {
 
   // Function to handle navigation when Avatar is clicked
   const goToSetImagePage = () => {
-    navigate("/set-image"); // Navigate to the set-image page
+    navigate("/setimage"); // Navigate to the set-image page
   };
 
   return (

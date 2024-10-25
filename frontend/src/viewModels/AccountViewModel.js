@@ -55,11 +55,12 @@ export default class AccountViewModel{
     static async getProfilePicture(){
        
         const response = await AccountService.getProfilePicture();
-        if("error"in response){
+        
+        if(response.error){
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
-        return response;
+        return response.imageUrl;
 
     }
 
@@ -85,6 +86,8 @@ export default class AccountViewModel{
         return response;
 
     }
+
+    
 
 
 

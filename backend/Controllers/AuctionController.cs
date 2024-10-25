@@ -30,6 +30,8 @@ namespace DreamBid.Controllers
         }
 
 
+
+
         // POST: api/Auction
         [HttpPost]
         [Authorize]
@@ -76,6 +78,9 @@ namespace DreamBid.Controllers
             );
         }
 
+
+
+
         
         // GET: api/Auction
         [HttpGet]
@@ -111,49 +116,53 @@ namespace DreamBid.Controllers
             return Ok(auctionDtos);
         }
 
+
+
+
+
         // GET: api/Auction/5
         
-[HttpGet("{id}")]
-public async Task<ActionResult<AuctionDto>> GetAuction(int id)
-{
-    var auction = await _context.Auctions.FindAsync(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AuctionDto>> GetAuction(int id)
+        {
+            var auction = await _context.Auctions.FindAsync(id);
 
-    if (auction == null)
-    {
-        return NotFound();
-    }
-    
-    // Handle photo retrieval
-    if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
-    {
-        var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
-        
-        if (photoBytes == null)
-        {
-            _logger.LogError("Unable to load photo from path: {AuctionPicturePath}", auction.AuctionPicturePath);
-            auction.PhotoData = null;
-        }
-        else
-        {
-            var fileExtension = Path.GetExtension(auction.AuctionPicturePath).ToLower();
-            var mimeType = fileExtension switch
+            if (auction == null)
             {
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".gif" => "image/gif",
-                _ => "application/octet-stream"
-            };
-            auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
-        }
-    }
-    else
-    {
-        _logger.LogWarning("Auction {AuctionId} does not have a picture path.", auction.Id);
-        auction.PhotoData = null;
-    }
+                return NotFound();
+            }
+            
+            // Handle photo retrieval
+            if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
+            {
+                var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+                
+                if (photoBytes == null)
+                {
+                    _logger.LogError("Unable to load photo from path: {AuctionPicturePath}", auction.AuctionPicturePath);
+                    auction.PhotoData = null;
+                }
+                else
+                {
+                    var fileExtension = Path.GetExtension(auction.AuctionPicturePath).ToLower();
+                    var mimeType = fileExtension switch
+                    {
+                        ".jpg" or ".jpeg" => "image/jpeg",
+                        ".png" => "image/png",
+                        ".gif" => "image/gif",
+                        _ => "application/octet-stream"
+                    };
+                    auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
+                }
+            }
+            else
+            {
+                _logger.LogWarning("Auction {AuctionId} does not have a picture path.", auction.Id);
+                auction.PhotoData = null;
+            }
 
-    return Ok(AuctionMapper.ToDto(auction));
-}
+            return Ok(AuctionMapper.ToDto(auction));
+        }
 
         // [HttpGet("{id}")]
         // public async Task<ActionResult<AuctionDto>> GetAuction(int id)
@@ -188,6 +197,59 @@ public async Task<ActionResult<AuctionDto>> GetAuction(int id)
 
         //     return Ok(AuctionMapper.ToDto(auction));
         // }
+
+
+
+
+
+        // GET: api/Auction/my
+        [HttpGet("my")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<AuctionDto>>> GetMyAuctions()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var myAuctions = await _context.Auctions
+                .Where(auction => auction.UserId == userId)
+                .ToListAsync();
+
+            if (!myAuctions.Any())
+            {
+                return NotFound("No auctions found for the current user.");
+            }
+
+            foreach (var auction in myAuctions)
+            {
+                if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
+                {
+                    var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+                    var fileExtension = Path.GetExtension(auction.AuctionPicturePath);
+                    var mimeType = fileExtension.ToLower() switch
+                    {
+                        ".jpg" or ".jpeg" => "image/jpeg",
+                        ".png" => "image/png",
+                        ".gif" => "image/gif",
+                        _ => "application/octet-stream"
+                    };
+                    auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
+                }
+                else
+                {
+                    _logger.LogWarning("Auction {AuctionId} does not have a picture path.", auction.Id);
+                    auction.PhotoData = null;
+                }
+            }
+
+            var auctionDtos = AuctionMapper.ToDtoList(myAuctions);
+            return Ok(auctionDtos);
+        }
+
+
 
         
 

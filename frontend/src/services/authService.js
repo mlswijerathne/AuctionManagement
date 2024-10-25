@@ -10,7 +10,10 @@ export default class AuthService {
     static async loginAccount(loginAccountDto)   {
 
         const response = await API.post("/api/v1/accounts/login" ,loginAccountDto);
-        return response.data;
+        const { userId, ...userData } = response.data; // Adjust based on your API response structure
+        localStorage.setItem("userId", userId); // Store user ID in local storage
+        return userData; // Return the user data excluding the userId
+        
         
     }
     
