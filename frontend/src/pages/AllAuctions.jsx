@@ -1,3 +1,5 @@
+// AllAuctions.jsx
+
 import { useEffect, useState } from 'react';
 import AllAuctionsBox from '../features/AllAuctionsBox';
 import AuctionViewModel from '../viewModels/AuctionViewModel';
@@ -36,27 +38,23 @@ const AllAuctionsPage = () => {
             }
     
             try {
-              // Fetch photo and highest bid simultaneously
-              const [photoUrl, highestBidResponse] = await Promise.all([
+              const [photoUrl, bidHistory] = await Promise.all([
                 AuctionService.getAuctionPhoto(auction.id),
-                BidService.getHighestBid(auction.id)
+                BidService.getBidHistory(auction.id)
               ]);
 
-              // Get bid history for count
-              const bidHistory = await BidService.getBidHistory(auction.id);
-
-              const highestBidAmount = highestBidResponse && !highestBidResponse.error 
-                ? highestBidResponse.amount 
+              // Calculate bids count and highest bid
+              const bidsCount = Array.isArray(bidHistory) ? bidHistory.length : 0;
+              const highestBid = bidsCount > 0 
+                ? Math.max(...bidHistory.map(bid => bid.amount))
                 : auction.startingPrice;
-
-              const bidCount = bidHistory && Array.isArray(bidHistory) ? bidHistory.length : 0;
 
               return {
                 ...auction,
                 photoUrl: photoUrl.error ? null : photoUrl,
                 timeLeft: new Date(auction.endTime) - new Date(),
-                bidsCount: bidCount,
-                highestBid: highestBidAmount
+                bidsCount: bidsCount,
+                highestBid: highestBid
               };
             } catch (err) {
               console.error(`Error fetching details for auction ${auction.id}:`, err);
@@ -96,40 +94,17 @@ const AllAuctionsPage = () => {
     // Apply search filter
     if (searchTerm) {
       filteredAuctions = filteredAuctions.filter(auction => {
-        return (
-          auction.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          auction.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        return auction.title.toLowerCase().includes(searchTerm.toLowerCase());
       });
-    }
-
-    // Apply sorting
-    switch (filters.sort) {
-      case 'endTime':
-        filteredAuctions.sort((a, b) => a.timeLeft - b.timeLeft);
-        break;
-      case 'price':
-        filteredAuctions.sort((a, b) => b.highestBid - a.highestBid);
-        break;
-      case 'popularity':
-        filteredAuctions.sort((a, b) => b.bidsCount - a.bidsCount);
-        break;
-      case 'newest':
-        filteredAuctions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        break;
-      default:
-        break;
     }
 
     return filteredAuctions;
   };
 
-  const sortedAndFilteredAuctions = getSortedAndFilteredAuctions();
-
   return (
-    <AllAuctionsBox 
-      auctions={sortedAndFilteredAuctions}
-      error={error} 
+    <AllAuctionsBox
+      auctions={getSortedAndFilteredAuctions()}
+      error={error}
       loading={loading}
       filters={filters}
       onFilterChange={handleFilterChange}
