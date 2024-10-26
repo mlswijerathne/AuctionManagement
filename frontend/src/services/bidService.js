@@ -66,40 +66,48 @@ export default class BidService {
         }
     }
 
+    // static async getHighestBid(auctionId) {
+    //     try {
+    //         console.log("Fetching highest bid for auction:", auctionId);
+
+    //         const response = await API.get(`/api/Bid/${auctionId}/highest`);
+    //         console.log("=== Highest Bid Retrieved ===", response.data);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("=== Get Highest Bid Error ===", error);
+    //         return {
+    //             error: error.response?.data?.message || 
+    //                    error.message || 
+    //                    "Failed to fetch highest bid"
+    //         };
+    //     }
+    // }
     static async getHighestBid(auctionId) {
         try {
-            console.log("Fetching highest bid for auction:", auctionId);
-
-            const response = await API.get(`/api/Bid/${auctionId}/highest`);
-            console.log("=== Highest Bid Retrieved ===", response.data);
-            return response.data;
+            const bidHistory = await this.getBidHistory(auctionId);
+            if (bidHistory && bidHistory.length > 0) {
+                return bidHistory[0]; // Since bids are ordered by amount desc
+            }
+            return null;
         } catch (error) {
-            console.error("=== Get Highest Bid Error ===", error);
-            return {
-                error: error.response?.data?.message || 
-                       error.message || 
-                       "Failed to fetch highest bid"
-            };
+            console.error('Error fetching highest bid:', error);
+            return null;
         }
     }
 
+
     static async getBidHistory(auctionId) {
-    try {
-        const response = await API.get(`/api/Bid/auction/${auctionId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+        try {
+            const response = await API.get(`/api/Bid/auction/${auctionId}`);
+            if (response.data && Array.isArray(response.data.bids)) {
+                return response.data.bids;
             }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("=== Get Bid History Error ===", error);
-        return {
-            error: error.response?.data || 
-                   error.message || 
-                   "Failed to fetch bid history"
-        };
+            return [];
+        } catch (error) {
+            console.error('Error fetching bid history:', error);
+            return [];
+        }
     }
-}
 
     static async getUserBids() {
         try {

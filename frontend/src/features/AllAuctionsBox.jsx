@@ -186,13 +186,15 @@ const AllAuctionsBox = ({
                     </Typography>
                     
                     <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {auction.bidsCount > 0 ? 'Current Bid:' : 'Starting Bid:'}
-                      </Typography>
-                      <Typography variant="h5" sx={{ color: '#ff8c00', fontWeight: 'bold' }}>
-                        ${auction.highestBid?.toLocaleString() || auction.startingPrice.toLocaleString()}
-                      </Typography>
-                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {auction.highestBid > auction.startingPrice ? 'Highest Bid:' : 'Starting Price:'}
+                    </Typography>
+                    <Typography variant="h5" sx={{ color: '#ff8c00', fontWeight: 'bold' }}>
+                      ${auction.highestBid > auction.startingPrice 
+                        ? auction.highestBid.toLocaleString() 
+                        : auction.startingPrice.toLocaleString()}
+                    </Typography>
+                  </Box>
 
                     <Grid container spacing={1} sx={{ mb: 2 }}>
                       <Grid item xs={6}>
@@ -207,12 +209,12 @@ const AllAuctionsBox = ({
                         />
                       </Grid>
                       <Grid item xs={6}>
-                        <Chip
-                          icon={<Gavel size={16} />}
-                          label={`${auction.bidsCount || 0} bids`}
-                          size="small"
-                          sx={{ backgroundColor: '#f8f9fa' }}
-                        />
+                      <Chip
+                        icon={<Gavel size={16} />}
+                        label={`${auction.bidsCount ?? 0} bids`}
+                        size="small"
+                        sx={{ backgroundColor: '#f8f9fa' }}
+                      />
                       </Grid>
                     </Grid>
 
