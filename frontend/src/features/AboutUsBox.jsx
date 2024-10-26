@@ -1,213 +1,283 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, List, ListItem, ListItemText, Divider } from "@mui/material";
-import { Link } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Button,
+  Paper,
+  Avatar,
+  useTheme,
+  useMediaQuery
+} from '@mui/material';
+import {
+  Gavel as GavelIcon,
+  Groups as GroupsIcon,
+  EmojiEvents as AwardIcon,
+  Public as PublicIcon,
+  ArrowForward as ArrowForwardIcon,
+  Timer as TimerIcon,
+  Security as SecurityIcon,
+  Verified as VerifiedIcon
+} from '@mui/icons-material';
 
-const AboutUsBox = () => {
+const AboutUs = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const stats = [
+    { icon: <GavelIcon fontSize="large" />, value: '50k+', label: 'Active Auctions', color: '#1976d2' },
+    { icon: <GroupsIcon fontSize="large" />, value: '100k+', label: 'Active Bidders', color: '#2196f3' },
+    { icon: <PublicIcon fontSize="large" />, value: '120+', label: 'Countries Served', color: '#64b5f6' },
+    { icon: <AwardIcon fontSize="large" />, value: '95%', label: 'Success Rate', color: '#90caf9' }
+  ];
+
+  const values = [
+    {
+      icon: <TimerIcon fontSize="large" />,
+      title: 'Real-Time Bidding',
+      description: 'Experience seamless, instantaneous bidding with our state-of-the-art auction platform.'
+    },
+    {
+      icon: <SecurityIcon fontSize="large" />,
+      title: 'Secure Transactions',
+      description: 'Your security is our priority. Every transaction is protected with advanced encryption.'
+    },
+    {
+      icon: <VerifiedIcon fontSize="large" />,
+      title: 'Verified Sellers',
+      description: 'We ensure all sellers are verified to maintain the highest standards of trust.'
+    }
+  ];
+
   return (
-    <>
-      <Box
+    <Box sx={{ bgcolor: '#f8f9fa', minHeight: '100vh' }}>
+      {/* Hero Section */}
+      <Paper
+        elevation={0}
         sx={{
-          backgroundColor: "#f3f4f6", // Light background color for the entire page
-          py: 6,
+          bgcolor: '#1976d2',
+          color: 'white',
+          borderRadius: 0,
+          py: { xs: 8, md: 12 },
+          mb: 6,
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        {/* About Us Section */}
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+            <Typography
+              variant="h2"
+              component="h1"
+              sx={{
+                fontWeight: 700,
+                mb: 3,
+                fontSize: { xs: '2.5rem', md: '3.75rem' }
+              }}
+            >
+              The Future of Online Auctions
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 4,
+                maxWidth: '800px',
+                mx: 'auto',
+                opacity: 0.9
+              }}
+            >
+              We're revolutionizing the way people buy and sell through transparent,
+              efficient, and exciting online auctions.
+            </Typography>
+            <Button
+              variant="outlined"
+              color="inherit"
+              size="large"
+              endIcon={<ArrowForwardIcon />}
+              sx={{
+                borderWidth: 2,
+                '&:hover': {
+                  borderWidth: 2,
+                  bgcolor: 'rgba(255, 255, 255, 0.1)'
+                }
+              }}
+            >
+              Explore Auctions
+            </Button>
+          </Box>
+        </Container>
+        {/* Decorative Elements */}
         <Box
           sx={{
-            maxWidth: 800,
-            margin: "auto",
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            boxShadow: 3,
-            mb: 6,
+            position: 'absolute',
+            top: -100,
+            right: -100,
+            width: 300,
+            height: 300,
+            borderRadius: '50%',
+            bgcolor: '#2196f3',
+            opacity: 0.1
           }}
-        >
-          <Typography variant="h4" align="center" gutterBottom>
-            About Us
-          </Typography>
-          <Typography paragraph>
-            HubSpot's company and culture are a lot like our product. They're crafted, not cobbled, for a delightful experience.
-          </Typography>
-          <img
-            src="About-01.webp"
-            alt="Company Team"
-            style={{ width: '100%', borderRadius: '8px', marginBottom: '20px' }}
-          />
-        </Box>
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: -100,
+            left: -100,
+            width: 300,
+            height: 300,
+            borderRadius: '50%',
+            bgcolor: '#64b5f6',
+            opacity: 0.1
+          }}
+        />
+      </Paper>
 
-        {/* Our Mission Section */}
-        <Box
-          sx={{
-            maxWidth: 800,
-            margin: "auto",
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            boxShadow: 3,
-            mb: 6,
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            Our Mission: Helping Millions of Organizations Grow Better
-          </Typography>
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <img
-                src="about-02.jpg"
-                alt="Office Environment"
-                style={{ width: '100%', borderRadius: '8px' }}
-              />
+      {/* Stats Section */}
+      <Container maxWidth="lg" sx={{ mb: 8 }}>
+        <Grid container spacing={3}>
+          {stats.map((stat, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Card
+                elevation={2}
+                sx={{
+                  height: '100%',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: 6
+                  }
+                }}
+              >
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: stat.color,
+                      width: 56,
+                      height: 56,
+                      mb: 2,
+                      mx: 'auto'
+                    }}
+                  >
+                    {stat.icon}
+                  </Avatar>
+                  <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {stat.value}
+                  </Typography>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    {stat.label}
+                  </Typography>
+                </CardContent>
+              </Card>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography paragraph>
-                We believe not just in growing bigger, but in growing better. And growing better means aligning the success of your own business
-                with the success of your customers. Win-win!
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
+          ))}
+        </Grid>
+      </Container>
 
-        {/* Our Story Section */}
-        <Box
-          sx={{
-            maxWidth: 800,
-            margin: "auto",
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            boxShadow: 3,
-            mb: 6,
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            Our Story
+      {/* Mission Section */}
+      <Container maxWidth="lg" sx={{ mb: 8 }}>
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Typography variant="h3" component="h2" sx={{ mb: 3, fontWeight: 700 }}>
+            Our Mission
           </Typography>
-          <Typography paragraph>
-            In 2004, fellow MIT graduate students Brian Halligan and Dharmesh Shah noticed a major shift in the way people shop and purchase products.
-            Buyers didn't want to be interrupted by ads; they wanted helpful information. In 2006, they founded HubSpot to help companies use that shift to grow better with inbound marketing.
+          <Typography variant="body1" sx={{ mb: 4, fontSize: '1.1rem', maxWidth: '800px', mx: 'auto' }}>
+            We're dedicated to creating the most trusted and efficient online auction platform,
+            connecting buyers and sellers worldwide through innovative technology and exceptional service.
           </Typography>
-          <img
-            src="about-02.jpg"
-            alt="Founders Story"
-            style={{ width: '100%', borderRadius: '8px', marginBottom: '20px' }}
-          />
         </Box>
+      </Container>
 
-        {/* Settings & Helps */}
-        <Box
-          sx={{
-            maxWidth: 800,
-            margin: "auto",
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            boxShadow: 3,
-            mb: 6,
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            Settings & Helps
+      {/* Values Section */}
+      <Box sx={{ bgcolor: 'white', py: 8 }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h3"
+            component="h2"
+            align="center"
+            sx={{ mb: 6, fontWeight: 700 }}
+          >
+            Why Choose Us
           </Typography>
           <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>Settings</Typography>
-              <List>
-                <ListItem component={Link} to="/account-settings">
-                  <ListItemText primary="Account Settings" />
-                </ListItem>
-                <Divider />
-                <ListItem component={Link} to="/privacy-settings">
-                  <ListItemText primary="Privacy Settings" />
-                </ListItem>
-                <Divider />
-                <ListItem component={Link} to="/notification-preferences">
-                  <ListItemText primary="Notification Preferences" />
-                </ListItem>
-                <Divider />
-              </List>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>Help & Support</Typography>
-              <List>
-                <ListItem component={Link} to="/faqs">
-                  <ListItemText primary="FAQs" />
-                </ListItem>
-                <Divider />
-                <ListItem component={Link} to="/contact-support">
-                  <ListItemText primary="Contact Support" />
-                </ListItem>
-                <Divider />
-                <ListItem component={Link} to="/user-guide">
-                  <ListItemText primary="User Guide" />
-                </ListItem>
-                <Divider />
-              </List>
-            </Grid>
+            {values.map((value, index) => (
+              <Grid item xs={12} md={4} key={index}>
+                <Card
+                  elevation={2}
+                  sx={{
+                    height: '100%',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: 6
+                    }
+                  }}
+                >
+                  <CardContent sx={{ p: 4 }}>
+                    <Avatar
+                      sx={{
+                        bgcolor: '#1976d2',
+                        width: 56,
+                        height: 56,
+                        mb: 2
+                      }}
+                    >
+                      {value.icon}
+                    </Avatar>
+                    <Typography variant="h5" component="h3" sx={{ mb: 2, fontWeight: 600 }}>
+                      {value.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      {value.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
-        </Box>
-
-        {/* By the Numbers Section */}
-        <Box
-          sx={{
-            maxWidth: 800,
-            margin: "auto",
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            boxShadow: 3,
-            mb: 6,
-            textAlign: 'center'
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            HubSpot By the Numbers
-          </Typography>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Typography variant="h6">12 Global Offices</Typography>
-              <Button variant="text" href="/" color="primary">
-                Learn more
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="h6">7,600+ Employees</Typography>
-              <Button variant="text" href="/" color="primary">
-                Learn more
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="h6">205,000+ Customers</Typography>
-              <Button variant="text" href="/" color="primary">
-                Learn more
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* Awards Section */}
-        <Box
-          sx={{
-            maxWidth: 800,
-            margin: "auto",
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: "#ffffff",
-            boxShadow: 3,
-            textAlign: 'center'
-          }}
-        >
-          <Typography variant="body1" gutterBottom>
-            Voted #1 in 318 categories
-          </Typography>
-          <Button variant="text" href="/" color="primary">
-            Learn more
-          </Button>
-        </Box>
+        </Container>
       </Box>
-    </>
+
+      {/* CTA Section */}
+      <Container maxWidth="lg" sx={{ my: 8 }}>
+        <Paper
+          elevation={3}
+          sx={{
+            bgcolor: '#1976d2',
+            color: 'white',
+            py: 8,
+            px: 4,
+            textAlign: 'center',
+            borderRadius: 4
+          }}
+        >
+          <Typography variant="h3" component="h2" sx={{ mb: 3, fontWeight: 700 }}>
+            Ready to Start Bidding?
+          </Typography>
+          <Typography variant="h6" sx={{ mb: 4, maxWidth: 800, mx: 'auto', opacity: 0.9 }}>
+            Join thousands of satisfied users who trust our platform for their auction needs.
+          </Typography>
+          <Button
+            variant="outlined"
+            color="inherit"
+            size="large"
+            sx={{
+              borderWidth: 2,
+              px: 4,
+              '&:hover': {
+                borderWidth: 2,
+                bgcolor: 'rgba(255, 255, 255, 0.1)'
+              }
+            }}
+          >
+            Join Now
+          </Button>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 
-export default AboutUsBox;
-
+export default AboutUs;

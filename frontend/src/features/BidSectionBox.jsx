@@ -184,55 +184,55 @@ const BidSectionBox = ({
         </Box>
         
         <List sx={{ bgcolor: 'background.paper' }}>
-        {safetyBidHistory.map((bid, index) => (
-    <div key={bid.id || index}>
-        <ListItem sx={{ px: 2, py: 1.5 }}>
-            <ListItemText
-                primary={
+          {safetyBidHistory.map((bid, index) => (
+            <div key={bid.id || index}>
+              <ListItem sx={{ px: 2, py: 1.5 }}>
+                <ListItemText
+                  primary={
                     <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        alignItems: 'baseline' 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'baseline' 
                     }}>
-                        <Typography 
-                            variant="body1" 
+                      <Typography 
+                        variant="body1" 
+                        component="span" 
+                        sx={{ 
+                          fontWeight: index === 0 ? 'bold' : 'normal',
+                          color: index === 0 ? 'primary.main' : 'text.primary'
+                        }}
+                      >
+                        ${bid.amount?.toFixed(2)}
+                        {index === 0 && (
+                          <Typography 
                             component="span" 
-                            sx={{ 
-                                fontWeight: index === 0 ? 'bold' : 'normal',
-                                color: index === 0 ? 'primary.main' : 'text.primary'
-                            }}
-                        >
-                            ${bid.amount?.toFixed(2)}
-                            {index === 0 && (
-                                <Typography 
-                                    component="span" 
-                                    variant="caption" 
-                                    sx={{ ml: 1, color: 'success.main' }}
-                                >
-                                    (Highest Bid)
-                                </Typography>
-                            )}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                            {formatDateTime(bid.createdAt)}
-                        </Typography>
+                            variant="caption" 
+                            sx={{ ml: 1, color: 'success.main' }}
+                          >
+                            (Highest Bid)
+                          </Typography>
+                        )}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {formatDateTime(bid.createdAt)}
+                      </Typography>
                     </Box>
-                }
-                secondary={
+                  }
+                  secondary={
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant="body2" color="text.secondary">
-                            Bid by: {bid.userFullName || 'Anonymous'}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                            {getTimeAgo(bid.createdAt)}
-                        </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Bid by: {bid.userFullName || 'Anonymous'}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {getTimeAgo(bid.createdAt)}
+                      </Typography>
                     </Box>
-                }
-            />
-        </ListItem>
-        {index < safetyBidHistory.length - 1 && <Divider />}
-    </div>
-))}
+                  }
+                />
+              </ListItem>
+              {index < safetyBidHistory.length - 1 && <Divider />}
+            </div>
+          ))}
           {safetyBidHistory.length === 0 && (
             <ListItem>
               <ListItemText 

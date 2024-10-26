@@ -8,6 +8,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using System.Linq;
+using DreamBid.Interfaces;
+using DreamBid.Service;
+using DreamBid.Dtos.Auction;
 
 namespace DreamBid.Controllers
 {
@@ -16,10 +19,15 @@ namespace DreamBid.Controllers
     public class BidController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IFileManagerService _fileManagerService;
+        private readonly ILogger<AuctionController> _logger;
 
-        public BidController(ApplicationDbContext context)
+         public BidController(ApplicationDbContext context , IFileManagerService fileManagerService, ILogger<AuctionController> logger)
         {
-            _context = context;
+            this._context = context;
+            this._fileManagerService = fileManagerService;
+            this._logger = logger;
+
         }
 
         // POST: api/Bid
@@ -142,5 +150,72 @@ namespace DreamBid.Controllers
 
             return Ok(bids.Select(BidMapper.ToDto));
         }
+
+        // GET: api/Bid/user/won-auctions
+            [HttpGet("user/won-auctions")]
+            [Authorize]
+            public async Task<ActionResult<IEnumerable<AuctionDto>>> GetWonAuctions()
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized();
+                }
+
+                // Get all auctions where the user has the highest bid and the auction has ended
+                var wonAuctionsIds = await _context.Bids
+                    .Where(b => b.UserId == userId)
+                    .GroupBy(b => b.AuctionId)
+                    .Where(g => g.Max(b => b.Amount) == _context.Bids
+                        .Where(b2 => b2.AuctionId == g.Key)
+                        .Max(b2 => b2.Amount))
+                    .Select(g => g.Key)
+                    .ToListAsync();
+
+                var wonAuctions = await _context.Auctions
+                    .Where(a => wonAuctionsIds.Contains(a.Id) && a.EndTime <= DateTime.UtcNow)
+                    .Include(a => a.User)
+                    .ToListAsync();
+
+                // If you're using the same photo handling as in AuctionController
+                foreach (var auction in wonAuctions)
+                {
+                    if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
+                    {
+                        try
+                        {
+                            var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
+                            if (photoBytes != null)
+                            {
+                                var fileExtension = Path.GetExtension(auction.AuctionPicturePath);
+                                var mimeType = fileExtension.ToLower() switch
+                                {
+                                    ".jpg" or ".jpeg" => "image/jpeg",
+                                    ".png" => "image/png",
+                                    ".gif" => "image/gif",
+                                    _ => "application/octet-stream"
+                                };
+                                auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
+                            }
+                            else
+                            {
+                                _logger.LogWarning("Photo not found for auction {AuctionId}", auction.Id);
+                                auction.PhotoData = null;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Error loading photo for auction {AuctionId}", auction.Id);
+                            auction.PhotoData = null;
+                        }
+                    }
+                }
+
+                var auctionDtos = AuctionMapper.ToDtoList(wonAuctions);
+                return Ok(auctionDtos);
+            }
+
+            
     }
 }

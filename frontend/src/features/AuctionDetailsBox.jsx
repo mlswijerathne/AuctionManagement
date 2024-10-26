@@ -18,8 +18,10 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from "react-router-dom";
 
+
 const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
   const navigate = useNavigate();
+
 
   const formatDateTime = (dateString) => {
     return new Date(dateString).toLocaleString('en-US', {
@@ -30,9 +32,11 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
 
   const isAuctionActive = () => {
     if (!auctionData) return false;
+
     const now = new Date();
     const startTime = new Date(auctionData.startTime);
     const endTime = new Date(auctionData.endTime);
+
     return now >= startTime && now <= endTime;
   };
 
@@ -113,11 +117,6 @@ const AuctionDetailsBox = ({ auctionData, photoUrl }) => {
                 {auctionData.title}
               </Typography>
 
-              <Chip
-                label={isAuctionActive() ? 'Active' : 'Inactive'}
-                color={isAuctionActive() ? 'success' : 'default'}
-                sx={{ mb: 3 }}
-              />
 
               <Typography 
                 variant="body1" 

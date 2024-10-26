@@ -23,7 +23,7 @@ import AllAuctionsPage from './pages/AllAuctions';
 import OwnAuctionEditPage from './pages/OwnAuctionEdit';
 import BidSectionPage from './pages/BidSection';
 import AuctionDetailsBox from './features/AuctionDetailsBox';
-
+import AuctionCheckoutPage from './pages/AuctionCheckout';
 
 
 
@@ -43,7 +43,8 @@ const navLinks = [
   { path: "/myauctions", name: "MyAuctions" },
   { path : "/auctiondetails", name: "AuctionDetails"},
   { path : "/allauctions" , name: "AllAuctions"},
-  { path : "/bidsection", name: "BidSection" }
+  { path : "/bidsection", name: "BidSection" },
+  { path : "/checkout", name: "AuctionCheckout" }
  
 
  
@@ -86,6 +87,7 @@ function App() {
             <Route path="/bidsection" element={<BidSectionPage />} />
             <Route path="/auction/:auctionId" element={<AuctionDetailsBox />} />
             <Route path="/bid/:auctionId" element={<BidSectionPage />} />
+            <Route path="/checkout/:id" element={<AuctionCheckoutPage />} />
             
             
           </Routes>

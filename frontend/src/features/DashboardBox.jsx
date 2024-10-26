@@ -15,16 +15,18 @@ import {
   Divider,
   Avatar
 } from '@mui/material';
-import { Edit, Gavel, Timer, TrendingUp, Package } from 'lucide-react';
+import { Edit, Gavel, Timer, TrendingUp, Package, Trophy } from 'lucide-react';
 
 const DashboardBox = ({ 
   auctions, 
   userBids,
+  wonAuctions,
   loading, 
   error, 
   onEditAuction, 
   onCreateAuction,
-  onViewAuctionDetails
+  onViewAuctionDetails,
+  onCheckout
 }) => {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -96,12 +98,12 @@ const DashboardBox = ({
           />
         </Grid>
         <Grid item xs={12} md={3}>
-          <StatCard 
-            title="Winning Bids" 
-            value={userBids.filter(bid => bid.isWinning).length}
-            icon={<TrendingUp size={24} />}
-          />
-        </Grid>
+        <StatCard 
+          title="Won Auctions" 
+          value={wonAuctions.length}
+          icon={<Trophy size={24} />}
+        />
+      </Grid>
         <Grid item xs={12} md={3}>
           <StatCard 
             title="Ending Soon" 
@@ -118,6 +120,11 @@ const DashboardBox = ({
           <Tab label="My Bids" />
         </Tabs>
       </Box>
+      <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
+      <Tab label="My Auctions" />
+      <Tab label="My Bids" />
+      <Tab label="Won Auctions" />
+    </Tabs>
 
       {/* Content Sections */}
       {activeTab === 0 && (
@@ -272,8 +279,64 @@ const DashboardBox = ({
               </Card>
             </Grid>
           ))}
-        </Grid>
+        </Grid>     
       )}
+        {activeTab === 2 && (
+    <Grid container spacing={3}>
+      {wonAuctions.map((auction) => (
+        <Grid item xs={12} md={6} lg={4} key={auction.id}>
+          <Card sx={{ 
+            borderRadius: '16px',
+            transition: 'transform 0.2s',
+            '&:hover': {
+              transform: 'translateY(-5px)',
+            }
+          }}>
+            {auction.photoUrl && (
+              <Box
+                sx={{
+                  height: 200,
+                  backgroundImage: `url(${auction.photoUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  borderTopLeftRadius: '16px',
+                  borderTopRightRadius: '16px',
+                }}
+                role="img"
+                aria-label={auction.title}
+              />
+            )}
+            <CardContent>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                {auction.title}
+              </Typography>
+              <Typography variant="h5" sx={{ color: '#ff8c00', fontWeight: 'bold', mb: 2 }}>
+                Won at ${auction.winningBid?.amount}
+              </Typography>
+              <Typography color="textSecondary" gutterBottom>
+                Won on: {new Date(auction.endTime).toLocaleDateString()}
+              </Typography>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ 
+                  mt: 2,
+                  background: 'linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #ff6b00 0%, #ff4d00 100%)',
+                  }
+                }}
+                onClick={() => onCheckout(auction.id)}
+              >
+                Buy Now
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  )}
+
     </Box>
   );
 };

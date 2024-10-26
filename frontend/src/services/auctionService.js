@@ -1,5 +1,8 @@
 import API from "./api";
 import AuthService from "./authService";
+import AuctionMapper from '../mappers/AuctionMapper';
+import ErrorMessage from '../viewModels/ErrorViewModel';
+import { validateUpdateAuctionDto } from '../dto/auction/updateAuctionDto';
 
 export default class AuctionService {
     static async addAuction(createAuctionDto) {
@@ -149,40 +152,49 @@ export default class AuctionService {
 
     static async updateAuction(id, updateAuctionDto) {
         try {
-          console.log('Service: Starting auction update for ID:', id);
-          
-          let formData;
-          if (updateAuctionDto instanceof FormData) {
-            formData = updateAuctionDto;
-            console.log('Service: Using provided FormData');
-          } else {
-            formData = new FormData();
-            Object.entries(updateAuctionDto).forEach(([key, value]) => {
-              if (value !== null && value !== undefined) {
-                formData.append(key, value);
-              }
-            });
-            console.log('Service: Created new FormData from DTO');
-          }
-      
-          const response = await API.put(`/api/Auction/${id}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
+            console.log('ViewModel: Starting auction update for ID:', id);
+            
+            // Skip Joi validation for FormData
+            if (updateAuctionDto instanceof FormData) {
+                console.log('ViewModel: Using FormData, skipping Joi validation');
+                const response = await AuctionService.updateAuction(id, updateAuctionDto);
+                console.log('ViewModel: Response from updateAuction (FormData):', response);
+                
+                if (response && typeof response === 'object' && "error" in response) {
+                    console.error('ViewModel: Service returned error:', response);
+                    return {
+                        error: response.error,
+                        details: response.details
+                    };
+                }
+                return AuctionMapper.ToAuctionDto(response);
             }
-          });
-      
-          console.log('Service: Update successful:', response.data);
-          return response.data;
+            
+            // Regular validation for non-FormData
+            const validationError = validateUpdateAuctionDto(updateAuctionDto);
+            if (validationError) {
+                console.error('ViewModel: Validation error:', validationError);
+                return ErrorMessage.errorMessageFromJoiError(validationError);
+            }
+        
+            const response = await AuctionService.updateAuction(id, updateAuctionDto);
+            console.log('ViewModel: Service response:', response);
+            
+            if (response && typeof response === 'object' && "error" in response) {
+                return ErrorMessage.errorMessageFromString(response.error);
+            }
+            
+            return AuctionMapper.ToAuctionDto(response);
         } catch (error) {
-          console.error('Service: Error during update:', error);
-          return {
-            error: error.response?.data?.message || 
-                   error.message || 
-                   "Failed to update auction",
-            details: error.response?.data
-          };
+            console.error('ViewModel: Unexpected error:', error);
+            return {
+                error: 'An unexpected error occurred during update',
+                details: error.message
+            };
         }
-      }
+    }
+    
+    
 
 
 
