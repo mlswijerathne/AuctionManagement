@@ -8,30 +8,38 @@ const AddAuctionPage = () => {
 
     const handleSubmit = async (formData) => {
         try {
-            console.log('Starting auction submission...');
+            console.log('=== AddAuction Page - Starting Submission ===');
             
+            // Log the incoming FormData
+            console.log("Incoming FormData contents:");
+            formData.forEach((value, key) => {
+                console.log(`${key}:`, value instanceof File ? `File: ${value.name}` : value);
+            });
+
             const createAuctionDto = new CreateAuctionDto();
             createAuctionDto.title = formData.get('title');
             createAuctionDto.description = formData.get('description');
             createAuctionDto.startingPrice = parseFloat(formData.get('startingPrice'));
-            createAuctionDto.startTime = formData.get('startTime');
+            createAuctionDto.startTime = formData.get('startingTime');
             createAuctionDto.endTime = formData.get('endTime');
             createAuctionDto.auctionPicturePath = formData.get('auctionPicturePath');
 
-            console.log('Created DTO:', createAuctionDto);
+            console.log('=== Created DTO ===', createAuctionDto);
 
             const response = await AuctionViewModel.addAuction(createAuctionDto);
-            console.log('Submission response:', response);
+            console.log('=== ViewModel Response ===', response);
 
-            if ("error" in response) {
+            if (response && response.error) {
                 throw new Error(response.error);
             }
 
-            console.log('Auction added successfully:', response);
-            navigate('/auctions'); // Redirect to auctions list after successful submission
+            navigate('allAuctions');
             return response;
         } catch (error) {
-            console.error('Error in handleSubmit:', error);
+            console.error('=== Error in handleSubmit ===', {
+                message: error.message,
+                stack: error.stack
+            });
             throw error;
         }
     };

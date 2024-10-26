@@ -4,24 +4,38 @@ import AuthService from "./authService";
 export default class AuctionService {
     static async addAuction(createAuctionDto) {
         try {
+            console.log("=== AuctionService - Starting addAuction ===");
+            console.log("Incoming DTO:", createAuctionDto);
+    
             const formData = new FormData();
             
-            // Append auction data
+            console.log("=== Building FormData ===");
             Object.keys(createAuctionDto).forEach(key => {
-                if (key === 'auctionPicturePath' && createAuctionDto[key]) {
-                    formData.append('auctionPicturePath', createAuctionDto[key]);
+                const value = createAuctionDto[key];
+                console.log(`Adding ${key}:`, value instanceof File ? `File: ${value.name}` : value);
+                
+                if (key === 'auctionPicturePath' && value) {
+                    formData.append('auctionPicturePath', value);
                 } else {
-                    formData.append(key, createAuctionDto[key]);
+                    formData.append(key, value);
                 }
             });
-
+    
+            console.log("=== Making API Request ===");
             const response = await API.post("/api/Auction", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
             });
+    
+            console.log("=== API Response ===", response.data);
             return response.data;
         } catch (error) {
+            console.error("=== API Error ===", {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
             return {
                 error: error.response?.data?.message || 
                        error.message || 
@@ -102,45 +116,76 @@ export default class AuctionService {
     static async getAuction(id) {
         try {
             const response = await API.get(`/api/Auction/${id}`);
-            console.log('Auction fetch response:', response);
+            console.log('Auction fetch response:', {
+                status: response.status,
+                data: response.data,
+                headers: response.headers
+            });
+            
+            // Validate response data
+            if (!response.data) {
+                throw new Error('No data received from server');
+            }
+            
             return response.data;
         } catch (error) {
-            console.error('Error fetching auction:', error);
+            console.error('Detailed fetch error:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status,
+                stack: error.stack
+            });
+            
             return {
                 error: error.response?.data?.message || 
                        error.message || 
-                       "Failed to fetch auction"
+                       "Failed to fetch auction",
+                details: error.response?.data
             };
         }
     }
+
+    
 
     static async updateAuction(id, updateAuctionDto) {
         try {
-            const formData = new FormData();
-            
-            // Append auction data
-            Object.keys(updateAuctionDto).forEach(key => {
-                if (key === 'auctionPicturePath' && updateAuctionDto[key]) {
-                    formData.append('auctionPicturePath', updateAuctionDto[key]);
-                } else {
-                    formData.append(key, updateAuctionDto[key]);
-                }
+          console.log('Service: Starting auction update for ID:', id);
+          
+          let formData;
+          if (updateAuctionDto instanceof FormData) {
+            formData = updateAuctionDto;
+            console.log('Service: Using provided FormData');
+          } else {
+            formData = new FormData();
+            Object.entries(updateAuctionDto).forEach(([key, value]) => {
+              if (value !== null && value !== undefined) {
+                formData.append(key, value);
+              }
             });
-
-            const response = await API.put(`/api/Auction/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
-            return response.data;
+            console.log('Service: Created new FormData from DTO');
+          }
+      
+          const response = await API.put(`/api/Auction/${id}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          });
+      
+          console.log('Service: Update successful:', response.data);
+          return response.data;
         } catch (error) {
-            return {
-                error: error.response?.data?.message || 
-                       error.message || 
-                       "Failed to update auction"
-            };
+          console.error('Service: Error during update:', error);
+          return {
+            error: error.response?.data?.message || 
+                   error.message || 
+                   "Failed to update auction",
+            details: error.response?.data
+          };
         }
-    }
+      }
+
+
+
 
     static async deleteAuction(id) {
         try {

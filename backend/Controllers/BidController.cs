@@ -24,6 +24,7 @@ namespace DreamBid.Controllers
 
         // POST: api/Bid
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<BidDto>> CreateBid(CreateBidDto createBidDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
