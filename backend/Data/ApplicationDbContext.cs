@@ -16,6 +16,7 @@ namespace DreamBid.Data
         {
             base.OnModelCreating(builder);
 
+            // Seed Roles
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole
@@ -31,6 +32,40 @@ namespace DreamBid.Data
             };
 
             builder.Entity<IdentityRole>().HasData(roles);
+
+            // Create Admin User
+            var hasher = new PasswordHasher<User>();
+            var adminUser = new User
+            {
+                Id = "1", // Using a constant GUID for seeding
+                UserName = "admin@dreambid.com",
+                NormalizedUserName = "ADMIN@DREAMBID.COM",
+                Email = "admin@dreambid.com",
+                NormalizedEmail = "ADMIN@DREAMBID.COM",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                ConcurrencyStamp = Guid.NewGuid().ToString(),
+                FirstName = "Lakshitha",
+                LastName = "Wijerathne",
+                PhoneNumber = "0766298167",
+                PhoneNumberConfirmed = true,
+                TwoFactorEnabled = false,
+                LockoutEnabled = false,
+                AccessFailedCount = 0,
+                Role = "Admin"
+            };
+
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
+            builder.Entity<User>().HasData(adminUser);
+
+            // Seed Admin Role Assignment
+            builder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    RoleId = roles[0].Id, // Admin role ID
+                    UserId = adminUser.Id
+                }
+            );
         }
 
         public new DbSet<User> Users { get; set; }

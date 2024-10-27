@@ -1,13 +1,13 @@
+// loginBox.jsx
 import { useTheme } from "@emotion/react";
 import { Box, Button, Container, TextField, Typography, Alert, Grid } from "@mui/material";
 import { useState } from "react";
 
-const LoginBox = ({ handleSubmit }) => {
+const LoginBox = ({ handleSubmit, handleLogout, error }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -16,15 +16,10 @@ const LoginBox = ({ handleSubmit }) => {
       ...prevData,
       [name]: value
     }));
-    setError("");
   };
 
   const validateForm = () => {
-    if (!formData.email || !formData.password) {
-      setError("Please fill in all fields");
-      return false;
-    }
-    return true;
+    return formData.email && formData.password;
   };
 
   const onSubmit = async (e) => {
@@ -35,7 +30,7 @@ const LoginBox = ({ handleSubmit }) => {
         await handleSubmit(e, formData.email, formData.password);
         setFormData({ email: "", password: "" });
       } catch (err) {
-        setError(err.message || "Login failed. Please try again.");
+        console.error(err);
       } finally {
         setIsSubmitting(false);
       }
@@ -59,78 +54,90 @@ const LoginBox = ({ handleSubmit }) => {
         }}
       >
         <Grid container spacing={2}>
-          {/* Left side - Illustration */}
-          <Grid item xs={12} md={6}>
-            <Box
-              component="img"
-              src="Login.png"
-              alt="Login Illustration"
-              sx={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 2 }}
-            />
-          </Grid>
-          
-          {/* Right side - Login Form */}
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                height: '100%',
-              }}
-            >
-              <Typography component="h1" variant="h4">
-                Auction Login Page
-              </Typography>
-              {error && (
-                <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
-                  {error}
-                </Alert>
-              )}
-              <Box
-                component="form"
-                onSubmit={onSubmit}
-                sx={{ mt: 1, width: '100%' }}
+          {handleLogout ? (
+            // Display the logout button if logged in
+            <Grid item xs={12}>
+              <Button
+                onClick={handleLogout}
+                variant="outlined"
+                color="secondary"
+                fullWidth
+                sx={{ mt: 2 }}
               >
-                <TextField
-                  margin="normal"
-                  id="email"
-                  name="email"
-                  autoComplete="email"
-                  label="Email"
-                  type="email"
-                  autoFocus
-                  fullWidth
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  disabled={isSubmitting}
+                Logout
+              </Button>
+            </Grid>
+          ) : (
+            // Display the login form if not logged in
+            <>
+              <Grid item xs={12} md={6}>
+                <Box
+                  component="img"
+                  src="Login.png"
+                  alt="Login Illustration"
+                  sx={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 2 }}
                 />
-                <TextField
-                  margin="normal"
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  disabled={isSubmitting}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2, backgroundColor: 'orange', color: 'white', '&:hover': { backgroundColor: '#ff8c00' } }}
-                  disabled={isSubmitting}
+              </Grid>
+              
+              <Grid item xs={12} md={6}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    height: '100%',
+                  }}
                 >
-                  {isSubmitting ? 'Logging in...' : 'Login'}
-                </Button>
-              </Box>
-            </Box>
-          </Grid>
+                  <Typography component="h1" variant="h4">
+                    Auction Login Page
+                  </Typography>
+                  {error && (
+                    <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+                      {error}
+                    </Alert>
+                  )}
+                  <Box component="form" onSubmit={onSubmit} sx={{ mt: 1, width: '100%' }}>
+                    <TextField
+                      margin="normal"
+                      id="email"
+                      name="email"
+                      autoComplete="email"
+                      label="Email"
+                      type="email"
+                      autoFocus
+                      fullWidth
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      disabled={isSubmitting}
+                    />
+                    <TextField
+                      margin="normal"
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                      disabled={isSubmitting}
+                    />
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2, backgroundColor: 'orange', color: 'white', '&:hover': { backgroundColor: '#ff8c00' } }}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Logging in...' : 'Login'}
+                    </Button>
+                  </Box>
+                </Box>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
     </Container>

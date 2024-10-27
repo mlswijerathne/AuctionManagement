@@ -10,6 +10,7 @@ namespace DreamBid.Dtos.User
         public string ContactNumber { get; set; }   
         public string Address { get; set; }
         public string Id { get; set; }
+        public string Role { get; set; }
         
     }
 }

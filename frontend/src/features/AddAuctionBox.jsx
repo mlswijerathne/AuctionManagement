@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Box, Button, TextField, Typography, Alert } from "@mui/material";
+import PropTypes from 'prop-types';
 
-const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
+const AddAuctionBox = ({ onSubmit }) => {
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -16,9 +17,34 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === "auctionPicturePath") {
+            // Handle file input
+            if (files && files[0]) {
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(files[0].type)) {
+                    setError("Please upload a valid image file (JPEG, PNG, or GIF)");
+                    return;
+                }
+                // Validate file size (e.g., max 5MB)
+                if (files[0].size > 5 * 1024 * 1024) {
+                    setError("File size should not exceed 5MB");
+                    return;
+                }
+            }
             setFormData(prevData => ({
                 ...prevData,
                 [name]: files[0]
+            }));
+        } else if (name === "startingPrice") {
+            // Ensure positive numbers only for price
+            const numValue = parseFloat(value);
+            if (numValue < 0) {
+                setError("Starting price cannot be negative");
+                return;
+            }
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: value
             }));
         } else {
             setFormData(prevData => ({
@@ -30,18 +56,54 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
     };
 
     const validateForm = () => {
-        if (!formData.title || 
-            !formData.description || 
-            !formData.startingPrice || 
-            !formData.startingTime || 
-            !formData.endTime || 
-            !formData.auctionPicturePath) {
-            setError("Please fill in all fields");
+        // Validate required fields
+        if (!formData.title) {
+            setError("Title is required");
             return false;
         }
+        if (!formData.description) {
+            setError("Description is required");
+            return false;
+        }
+        if (!formData.startingPrice) {
+            setError("Starting price is required");
+            return false;
+        }
+        if (!formData.startingTime) {
+            setError("Starting time is required");
+            return false;
+        }
+        if (!formData.endTime) {
+            setError("End time is required");
+            return false;
+        }
+        if (!formData.auctionPicturePath) {
+            setError("Auction picture is required");
+            return false;
+        }
+
+        // Validate dates
+        const startTime = new Date(formData.startingTime);
+        const endTime = new Date(formData.endTime);
+        const now = new Date();
+
+        if (startTime < now) {
+            setError("Start time must be in the future");
+            return false;
+        }
+        if (endTime <= startTime) {
+            setError("End time must be after start time");
+            return false;
+        }
+
+        // Validate price format
+        if (isNaN(parseFloat(formData.startingPrice)) || parseFloat(formData.startingPrice) <= 0) {
+            setError("Please enter a valid positive number for starting price");
+            return false;
+        }
+
         return true;
     };
-
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -51,18 +113,23 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
             return;
         }
 
+        if (typeof onSubmit !== 'function') {
+            console.error('onSubmit prop is not a function');
+            setError("Internal error: Form submission handler not properly configured");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             const formDataToSubmit = new FormData();
-            formDataToSubmit.append("title", formData.title);
-            formDataToSubmit.append("description", formData.description);
+            formDataToSubmit.append("title", formData.title.trim());
+            formDataToSubmit.append("description", formData.description.trim());
             formDataToSubmit.append("startingPrice", formData.startingPrice);
             formDataToSubmit.append("startingTime", formData.startingTime);
             formDataToSubmit.append("endTime", formData.endTime);
             formDataToSubmit.append("auctionPicturePath", formData.auctionPicturePath);
 
             console.log('Submitting form data...');
-            // Call the parent component's onSubmit function
             await onSubmit(formDataToSubmit);
             console.log('Form submitted successfully');
 
@@ -75,6 +142,9 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                 endTime: "",
                 auctionPicturePath: null
             });
+            
+            // Clear any error messages
+            setError("");
         } catch (err) {
             console.error('Form submission error:', err);
             setError(err.message || "Submission failed. Please try again.");
@@ -109,11 +179,13 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
             >
                 Add <span>Auction</span> Item
             </Typography>
+            
             {error && (
-                <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+                <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
                     {error}
                 </Alert>
             )}
+
             <TextField
                 margin="normal"
                 label="Title"
@@ -124,7 +196,10 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                 required
                 disabled={isSubmitting}
                 sx={{ backgroundColor: "white" }}
+                inputProps={{ maxLength: 100 }}
+                helperText={`${formData.title.length}/100 characters`}
             />
+
             <TextField
                 margin="normal"
                 label="Description"
@@ -137,7 +212,10 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                 required
                 disabled={isSubmitting}
                 sx={{ backgroundColor: "white" }}
+                inputProps={{ maxLength: 1000 }}
+                helperText={`${formData.description.length}/1000 characters`}
             />
+
             <TextField
                 margin="normal"
                 label="Starting Price"
@@ -149,10 +227,12 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                 required
                 disabled={isSubmitting}
                 sx={{ backgroundColor: "white" }}
+                inputProps={{ min: 0, step: "0.01" }}
             />
+
             <TextField
                 margin="normal"
-                label=""
+                label="Starting Time"
                 name="startingTime"
                 type="datetime-local"
                 fullWidth
@@ -161,10 +241,12 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                 required
                 disabled={isSubmitting}
                 sx={{ backgroundColor: "white" }}
+                InputLabelProps={{ shrink: true }}
             />
+
             <TextField
                 margin="normal"
-                label=""
+                label="End Time"
                 name="endTime"
                 type="datetime-local"
                 fullWidth
@@ -173,16 +255,30 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                 required
                 disabled={isSubmitting}
                 sx={{ backgroundColor: "white" }}
+                InputLabelProps={{ shrink: true }}
             />
-            <input
-                accept="image/*"
-                type="file"
-                name="auctionPicturePath"
-                onChange={handleChange}
-                disabled={isSubmitting}
-                style={{ backgroundColor: "white", width: "100%", padding: "16px", marginTop: "16px" }}
-                required
-            />
+
+            <Box sx={{ mt: 2, mb: 2 }}>
+                <input
+                    accept="image/*"
+                    type="file"
+                    name="auctionPicturePath"
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    style={{ 
+                        backgroundColor: "white", 
+                        width: "100%", 
+                        padding: "16px",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px"
+                    }}
+                    required
+                />
+                <Typography variant="caption" color="textSecondary">
+                    Supported formats: JPEG, PNG, GIF. Max size: 5MB
+                </Typography>
+            </Box>
+
             <Button
                 type="submit"
                 variant="contained"
@@ -192,6 +288,7 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
                     backgroundColor: "orange",
                     color: "black",
                     "&:hover": { backgroundColor: "darkorange" },
+                    "&:disabled": { backgroundColor: "#ffd699" }
                 }}
                 disabled={isSubmitting}
             >
@@ -199,6 +296,10 @@ const AddAuctionBox = ({ onSubmit }) => {  // Add onSubmit prop here
             </Button>
         </Box>
     );
+};
+
+AddAuctionBox.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
 };
 
 export default AddAuctionBox;

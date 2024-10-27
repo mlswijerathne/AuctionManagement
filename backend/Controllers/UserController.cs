@@ -60,29 +60,46 @@ namespace DreamBid.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+{
+    try
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Email.ToLower() == loginDto.Email.ToLower());
-            if (user == null)
-            {
-                return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
-            }
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == loginDto.Email.ToLower());
+            
+        if (user == null)
+            return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+        var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-            if (!result.Succeeded)
-                return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
+        if (!result.Succeeded)
+            return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
 
-            Response.Headers.Append("x-auth-token", _tokenService.CreateToken(user, "User"));
+        // Get user roles
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault() ?? "User";
 
-            return Ok(user.ToUserDto());
-        }
+        // Create token with the correct role
+        var token = _tokenService.CreateToken(user, role);
+        Response.Headers.Append("x-auth-token", token);
+        Response.Headers.Append("Access-Control-Expose-Headers", "x-auth-token");
+
+        var userDto = user.ToUserDto();
+        userDto.Role = role;
+        return Ok(userDto);
+    }
+    catch(Exception ex)
+    {
+        _logger.LogError(ex, "Error during login");
+        return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal server error"));
+    }
+}
 
         [HttpDelete("me")]
-        [Authorize]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> DeleteUser()
         {
             var userId = User.GetUserId();
@@ -99,7 +116,7 @@ namespace DreamBid.Controllers
         }
 
         [HttpGet("me")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> GetUser()
         {
             var userId = User.GetUserId();
@@ -132,7 +149,7 @@ namespace DreamBid.Controllers
         }
 
         [HttpGet("me/profilePicture")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<IActionResult> GetProfilePicture()
         {
             var userId = User.GetUserId();

@@ -17,7 +17,8 @@ namespace DreamBid.Mappers
                 LastName = userModel.LastName,
                 DOB = userModel.DOB,
                 ContactNumber = userModel.ContactNumber,
-                Address = userModel.Address
+                Address = userModel.Address,
+                Role = userModel.Role
                 
                 
             };

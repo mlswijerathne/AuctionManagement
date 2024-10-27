@@ -1,15 +1,25 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import AccountViewModel from "../viewModels/AccountViewModel";
 import AccountDto from "../dto/account/accountDto";
 import ProfileBox from "../features/ProfileBox";
+import AuthService from '../services/authService';
 
 const ProfilePage = () => {
+  const navigate = useNavigate(); // Initialize navigate
   const [profileData, setProfileData] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = localStorage.getItem("token"); // Check for token
+
+      if (!token) {
+        navigate('/login'); // Redirect to login if not authenticated
+        return;
+      }
+
       try {
         // Fetch profile data
         const response = await AccountViewModel.getAccount();
@@ -32,7 +42,7 @@ const ProfilePage = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [navigate]); // Add navigate to dependency array
 
   const handleSubmit = async (formData) => {
     try {
@@ -61,7 +71,6 @@ const ProfilePage = () => {
     }
   };
 
-
   const handleUpdateProfilePicture = async (file) => {
     try {
       const response = await AccountViewModel.updateProfilePicture(file);
@@ -89,8 +98,6 @@ const ProfilePage = () => {
       throw new Error(error.message || "Failed to delete profile picture");
     }
   };
-
-
 
   if (error) {
     return <div>Error: {error}</div>;

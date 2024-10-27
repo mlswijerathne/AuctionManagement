@@ -164,39 +164,6 @@ namespace DreamBid.Controllers
             return Ok(AuctionMapper.ToDto(auction));
         }
 
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<AuctionDto>> GetAuction(int id)
-        // {
-        //     var auction = await _context.Auctions.FindAsync(id);
-
-        //     if (auction == null)
-        //     {
-        //         return NotFound();
-        //     }
-            
-        //     // Handle photo retrieval
-        //     if (!string.IsNullOrEmpty(auction.AuctionPicturePath))
-        //     {
-                
-        //             var photoBytes = await _fileManagerService.GetFile(auction.AuctionPicturePath);
-        //             var fileExtension = Path.GetExtension(auction.AuctionPicturePath);
-        //             var mimeType = fileExtension.ToLower() switch
-        //             {
-        //                 ".jpg" or ".jpeg" => "image/jpeg",
-        //                 ".png" => "image/png",
-        //                 ".gif" => "image/gif",
-        //                 _ => "application/octet-stream"
-        //             };
-        //             auction.PhotoData = $"data:{mimeType};base64,{Convert.ToBase64String(photoBytes)}";
-                
-        //     }
-        //     else {
-        //          _logger.LogError("Error loading photo for auction {AuctionId}", auction.Id);
-        //         auction.PhotoData = null;
-        //     }
-
-        //     return Ok(AuctionMapper.ToDto(auction));
-        // }
 
 
 
@@ -343,7 +310,7 @@ namespace DreamBid.Controllers
 
         // DELETE: api/Auction/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize (Roles = "User,Admin")]
         public async Task<IActionResult> DeleteAuction(int id)
         {
             var auction = await _context.Auctions.FindAsync(id);

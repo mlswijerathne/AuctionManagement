@@ -10,6 +10,7 @@ namespace DreamBid.Models
         public string? ContactNumber { get; set; }
         public string? Address { get; set; }
         public string? ProfilePicuturePath { get; set; }
+        public string Role { get; set; } = "User";
         
     }
 }

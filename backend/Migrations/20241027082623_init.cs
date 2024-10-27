@@ -38,6 +38,7 @@ namespace backend.Migrations
                     ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePicuturePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -209,13 +210,13 @@ namespace backend.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Bids_Auctions_AuctionId",
                         column: x => x.AuctionId,
                         principalTable: "Auctions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -223,9 +224,19 @@ namespace backend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0eb4172c-107d-4e9d-bb42-8cb4dab35714", null, "Admin", "ADMIN" },
-                    { "7ccd9240-ac2c-4760-b469-42389f267f40", null, "User", "USER" }
+                    { "1fb3fbc6-1c25-4c5f-9723-ab02d49ed59f", null, "User", "USER" },
+                    { "daa6c4de-f318-43eb-aaf3-a391bc7d44c1", null, "Admin", "ADMIN" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "ContactNumber", "DOB", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePicuturePath", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "1", 0, null, "1539e442-a2c5-465f-8783-4ee582ba4e2e", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@dreambid.com", true, "Lakshitha", "Wijerathne", false, null, "ADMIN@DREAMBID.COM", "ADMIN@DREAMBID.COM", "AQAAAAIAAYagAAAAEJl1LMWeglpeAbKbfaeScHGfLugtQiYqgrom8z+oC5khrNQunODgjjqGbBxmeDJ8ww==", "0766298167", true, null, "Admin", "51228250-ee39-4320-967a-874b161b5b0b", false, "admin@dreambid.com" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "daa6c4de-f318-43eb-aaf3-a391bc7d44c1", "1" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241023073934_ModifyBidsTable")]
-    partial class ModifyBidsTable
+    [Migration("20241027082623_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,6 +160,10 @@ namespace backend.Migrations
                     b.Property<string>("ProfilePicuturePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -181,6 +185,29 @@ namespace backend.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1539e442-a2c5-465f-8783-4ee582ba4e2e",
+                            DOB = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@dreambid.com",
+                            EmailConfirmed = true,
+                            FirstName = "Lakshitha",
+                            LastName = "Wijerathne",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@DREAMBID.COM",
+                            NormalizedUserName = "ADMIN@DREAMBID.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJl1LMWeglpeAbKbfaeScHGfLugtQiYqgrom8z+oC5khrNQunODgjjqGbBxmeDJ8ww==",
+                            PhoneNumber = "0766298167",
+                            PhoneNumberConfirmed = true,
+                            Role = "Admin",
+                            SecurityStamp = "51228250-ee39-4320-967a-874b161b5b0b",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@dreambid.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -212,13 +239,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9c0d5900-eef2-47ea-ae48-cd94d26bb09e",
+                            Id = "daa6c4de-f318-43eb-aaf3-a391bc7d44c1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a19a4616-0bf5-4831-a0d2-83c5eea616a4",
+                            Id = "1fb3fbc6-1c25-4c5f-9723-ab02d49ed59f",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -309,6 +336,13 @@ namespace backend.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1",
+                            RoleId = "daa6c4de-f318-43eb-aaf3-a391bc7d44c1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -344,7 +378,7 @@ namespace backend.Migrations
             modelBuilder.Entity("DreamBid.Models.Bid", b =>
                 {
                     b.HasOne("DreamBid.Models.Auction", "Auction")
-                        .WithMany()
+                        .WithMany("Bids")
                         .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -409,6 +443,11 @@ namespace backend.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Auction", b =>
+                {
+                    b.Navigation("Bids");
                 });
 #pragma warning restore 612, 618
         }
