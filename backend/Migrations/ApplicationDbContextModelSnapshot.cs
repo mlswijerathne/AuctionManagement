@@ -188,7 +188,7 @@ namespace backend.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1539e442-a2c5-465f-8783-4ee582ba4e2e",
+                            ConcurrencyStamp = "e0f96ada-1fb2-4197-8c75-d14c7e6afc2e",
                             DOB = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@dreambid.com",
                             EmailConfirmed = true,
@@ -197,11 +197,11 @@ namespace backend.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@DREAMBID.COM",
                             NormalizedUserName = "ADMIN@DREAMBID.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJl1LMWeglpeAbKbfaeScHGfLugtQiYqgrom8z+oC5khrNQunODgjjqGbBxmeDJ8ww==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL8dZHIKGcIhjSXfRwMfjYTECMc4MNkCZ0RzKK5R4kuJ1iRo44WipPMIKz457x+pSw==",
                             PhoneNumber = "0766298167",
                             PhoneNumberConfirmed = true,
                             Role = "Admin",
-                            SecurityStamp = "51228250-ee39-4320-967a-874b161b5b0b",
+                            SecurityStamp = "fb340b23-9023-41f1-8b8f-8c4d89e00568",
                             TwoFactorEnabled = false,
                             UserName = "admin@dreambid.com"
                         });
@@ -236,13 +236,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "daa6c4de-f318-43eb-aaf3-a391bc7d44c1",
+                            Id = "26c09530-3725-49d1-aac6-a8c6ac11441b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1fb3fbc6-1c25-4c5f-9723-ab02d49ed59f",
+                            Id = "fc4fec9a-9f12-4972-a72d-31dea8dabc98",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -338,7 +338,7 @@ namespace backend.Migrations
                         new
                         {
                             UserId = "1",
-                            RoleId = "daa6c4de-f318-43eb-aaf3-a391bc7d44c1"
+                            RoleId = "26c09530-3725-49d1-aac6-a8c6ac11441b"
                         });
                 });
 

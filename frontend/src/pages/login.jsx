@@ -38,9 +38,9 @@ const LoginPage = () => {
 
       setIsAuthenticated(true);
       if (AuthService.isAdmin()) {
-        navigate('/admin/dashboard');
+        navigate("/");
       } else {
-        navigate('/home'); // Redirect to home or user's dashboard
+        navigate("/"); // Redirect to home or user's dashboard
       }
       
     } catch (error) {
