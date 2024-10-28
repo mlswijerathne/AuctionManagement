@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardContent,
-  CardHeader,
   Typography,
   Button,
   Grid,
@@ -12,21 +11,30 @@ import {
   Tabs,
   Tab,
   Chip,
-  Divider,
-  Avatar
+  Divider
 } from '@mui/material';
 import { Edit, Gavel, Timer, TrendingUp, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardBox = ({ 
-  auctions, 
-  userBids,
-  loading, 
-  error, 
-  onEditAuction, 
-  onCreateAuction,
-  onViewAuctionDetails
+  auctions = [], 
+  userBids = [],
+  loading = false, 
+  error = null, 
+  onEditAuction = () => {},
+  onCreateAuction = () => {},
+  onViewAuctionDetails = () => {}
 }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const navigate = useNavigate();
+
+  const handleCheckout = (bidId) => {
+    if (!bidId) {
+      console.error('No bid ID provided for checkout');
+      return;
+    }
+    navigate(`/checkout/${bidId}`);
+  };
 
   if (loading) {
     return (
@@ -267,6 +275,19 @@ const DashboardBox = ({
                     onClick={() => onViewAuctionDetails(bid.auctionId)}
                   >
                     View Auction Details
+                  </Button>
+                  
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ 
+                      mt: 2,
+                      background: 'linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%)',
+                      color: '#fff',
+                    }}
+                    onClick={() => handleCheckout(bid.id)}
+                  >
+                    Proceed to Checkout
                   </Button>
                 </CardContent>
               </Card>

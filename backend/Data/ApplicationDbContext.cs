@@ -38,7 +38,7 @@ namespace DreamBid.Data
             var adminUser = new User
             {
                 Id = "1", // Using a constant GUID for seeding
-                UserName = "admin@dreambid.com",
+                UserName = "admin",
                 NormalizedUserName = "ADMIN@DREAMBID.COM",
                 Email = "admin@dreambid.com",
                 NormalizedEmail = "ADMIN@DREAMBID.COM",
@@ -47,7 +47,8 @@ namespace DreamBid.Data
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 FirstName = "Lakshitha",
                 LastName = "Wijerathne",
-                PhoneNumber = "0766298167",
+                ContactNumber = "0766298167",
+                Address = "Colombo",
                 PhoneNumberConfirmed = true,
                 TwoFactorEnabled = false,
                 LockoutEnabled = false,

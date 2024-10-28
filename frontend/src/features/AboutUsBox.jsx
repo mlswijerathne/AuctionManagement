@@ -1,6 +1,9 @@
 import React from 'react';
 import { Box, Typography, Button, Grid, List, ListItem, ListItemText, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
+import aboutbg1 from '../assets/aboutUs1.jpg';
+import aboutbg2 from '../assets/aboutUs2.jpg';
+import aboutbg3 from '../assets/aboutUs3.jpg';
 
 const AboutUsBox = () => {
   return (
@@ -30,7 +33,7 @@ const AboutUsBox = () => {
             HubSpot's company and culture are a lot like our product. They're crafted, not cobbled, for a delightful experience.
           </Typography>
           <img
-            src="About-01.webp"
+            src={aboutbg1}
             alt="Company Team"
             style={{ width: '100%', borderRadius: '8px', marginBottom: '20px' }}
           />
@@ -54,7 +57,7 @@ const AboutUsBox = () => {
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
               <img
-                src="about-02.jpg"
+                src={aboutbg2}
                 alt="Office Environment"
                 style={{ width: '100%', borderRadius: '8px' }}
               />
@@ -88,7 +91,7 @@ const AboutUsBox = () => {
             Buyers didn't want to be interrupted by ads; they wanted helpful information. In 2006, they founded HubSpot to help companies use that shift to grow better with inbound marketing.
           </Typography>
           <img
-            src="about-02.jpg"
+            src={aboutbg3}
             alt="Founders Story"
             style={{ width: '100%', borderRadius: '8px', marginBottom: '20px' }}
           />

@@ -7,38 +7,59 @@ import CreateBidDto from '../dto/bid/createBidDto';
 export default class BidService {
     static async createBid(createBidDto) {
         try {
-            console.log("=== BidService - Starting createBid ===");
-            console.log("Incoming DTO:", createBidDto);
-    
-            // Validate the data before sending
-            if (!createBidDto.auctionId || !createBidDto.amount) {
-                throw new Error("Invalid bid data: auctionId and amount are required");
+            // Add validation before making the API call
+            if (!createBidDto.auctionId || !createBidDto.amount || !createBidDto.userId) {
+                return { error: "Invalid bid data provided." };
             }
-    
+
             const response = await API.post("/api/Bid", {
                 auctionId: parseInt(createBidDto.auctionId),
-                amount: parseFloat(createBidDto.amount)
+                amount: parseFloat(createBidDto.amount),
+                userId: createBidDto.userId
             }, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json'
                 }
             });
-    
-            console.log("=== Bid Created Successfully ===", response.data);
+
+            // Validate the response structure
+            if (!response.data || response.data.error) {
+                return { 
+                    error: response.data.error || "Failed to create bid. Invalid server response."
+                };
+            }
+
+            // Check for specific error conditions in the response
+            if (response.data.isOwner) {
+                return { error: "You cannot bid on your own auction." };
+            }
+
             return response.data;
         } catch (error) {
-            console.error("=== Create Bid Error ===", {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
+            // Enhanced error handling
+            if (error.response) {
+                const errorData = error.response.data;
+                
+                // Check for specific error types
+                if (errorData.code === "OWNER_BID_ATTEMPT") {
+                    return { error: "You cannot bid on your own auction." };
+                }
+                
+                if (errorData.code === "INVALID_BID_AMOUNT") {
+                    return { error: "Bid amount must be higher than the current highest bid." };
+                }
+
+                // Return the server's error message if available
+                if (typeof errorData === 'string') {
+                    return { error: errorData };
+                } else if (typeof errorData === 'object' && errorData.message) {
+                    return { error: errorData.message };
+                }
+            }
             
-            // Return more specific error messages
             return {
-                error: error.response?.data || 
-                       error.message || 
-                       "Failed to create bid"
+                error: "Failed to create bid. Please try again."
             };
         }
     }
@@ -66,22 +87,6 @@ export default class BidService {
         }
     }
 
-    // static async getHighestBid(auctionId) {
-    //     try {
-    //         console.log("Fetching highest bid for auction:", auctionId);
-
-    //         const response = await API.get(`/api/Bid/${auctionId}/highest`);
-    //         console.log("=== Highest Bid Retrieved ===", response.data);
-    //         return response.data;
-    //     } catch (error) {
-    //         console.error("=== Get Highest Bid Error ===", error);
-    //         return {
-    //             error: error.response?.data?.message || 
-    //                    error.message || 
-    //                    "Failed to fetch highest bid"
-    //         };
-    //     }
-    // }
     static async getHighestBid(auctionId) {
         try {
             const bidHistory = await this.getBidHistory(auctionId);
@@ -106,6 +111,43 @@ export default class BidService {
         } catch (error) {
             console.error('Error fetching bid history:', error);
             return [];
+        }
+    }
+
+    static async getWinningBids() {
+        try {
+            const response = await API.get("/api/Bid/user/winning-bids", {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            return response.data;
+        } catch (error) {
+            console.error("=== Get Winning Bids Error ===", error);
+            return {
+                error: error.response?.data?.message || 
+                       error.message || 
+                       "Failed to fetch winning bids"
+            };
+        }
+    }
+    
+    static async checkoutBid(bidId) {
+        try {
+            const response = await API.post(`/api/Bid/${bidId}/checkout`, {}, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+    
+            return response.data;
+        } catch (error) {
+            return {
+                error: error.response?.data?.message || 
+                       error.message || 
+                       "Failed to checkout bid"
+            };
         }
     }
 

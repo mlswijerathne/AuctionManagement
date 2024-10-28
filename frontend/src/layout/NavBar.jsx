@@ -87,7 +87,7 @@ const Navbar = () => {
         <div className="px-4 pt-2 pb-3 space-y-1">
           <Link to="/" className="block hover:text-primary">BidAuction</Link>
           <Link to="/allauctions" className="block hover:text-primary">Auctions</Link>
-          <Link to={userRole === 'Admin' ? '/admin/dashboard' : '/dashboard'} className="block hover:text-primary">Dashboard</Link>
+          <Link to={userRole === 'Admin' ? '/admin/dashboard' : '/dashboard'} className="block hover:text-primary">Admin Dashboard</Link>
           <Link to="/profile" className="block hover:text-primary">Profile</Link>
           <Link to="/faq" className="block hover:text-primary">FAQ</Link>
           {token ? (

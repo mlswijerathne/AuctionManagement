@@ -38,44 +38,56 @@ const AdminDashboard = () => {
   }, [tabValue]);
 
   const fetchData = async () => {
-    if (tabValue === 0) {
-      const response = await AdminService.getAllUsers();
-      if ('error' in response) {
-        setError(response.error);
+    try {
+      if (tabValue === 0) {
+        const response = await AdminService.getAllUsers();
+        if (response && response.error) {
+          setError(response.error);
+        } else {
+          setUsers(response || []);
+        }
       } else {
-        setUsers(response);
+        const response = await AdminService.getAllAuctions();
+        if (response && response.error) {
+          setError(response.error);
+        } else {
+          setAuctions(response || []);
+        }
       }
-    } else {
-      const response = await AdminService.getAllAuctions();
-      if ('error' in response) {
-        setError(response.error);
-      } else {
-        setAuctions(response);
-      }
+    } catch (err) {
+      setError('Failed to fetch data. Please try again.');
     }
   };
 
   const handleDeleteUser = async (userId) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      const response = await AdminService.deleteUser(userId);
-      if ('error' in response) {
-        setError(response.error);
-      } else {
-        setSuccessMessage('User deleted successfully');
-        fetchData();
+    try {
+      if (window.confirm('Are you sure you want to delete this user?')) {
+        const response = await AdminService.deleteUser(userId);
+        if (response && response.error) {
+          setError(response.error);
+        } else {
+          setSuccessMessage('User deleted successfully');
+          fetchData();
+        }
       }
+    } catch (err) {
+      setError('Failed to delete user. Please try again.');
     }
   };
 
   const handleDeleteAuction = async (auctionId) => {
-    if (window.confirm('Are you sure you want to delete this auction?')) {
-      const response = await AdminService.deleteAuction(auctionId);
-      if ('error' in response) {
-        setError(response.error);
-      } else {
-        setSuccessMessage('Auction deleted successfully');
-        fetchData();
+    try {
+      if (window.confirm('Are you sure you want to delete this auction?')) {
+        const response = await AdminService.deleteAuction(auctionId);
+        if (response && response.error) {
+          setError(response.error);
+        } else {
+          setSuccessMessage('Auction deleted successfully');
+          fetchData();
+        }
       }
+    } catch (err) {
+      setError('Failed to delete auction. Please try again.');
     }
   };
 
@@ -100,7 +112,7 @@ const AdminDashboard = () => {
 
   const UserProfiles = () => (
     <Grid container spacing={3}>
-      {users.map((user) => user ? (
+      {users.map((user) => user && (
         <Grid item xs={12} sm={6} md={4} key={user.email}>
           <Card 
             sx={{ 
@@ -155,7 +167,7 @@ const AdminDashboard = () => {
             </CardActions>
           </Card>
         </Grid>
-      ) : null)}
+      ))}
     </Grid>
   );
 
@@ -210,7 +222,7 @@ const AdminDashboard = () => {
               {auctions.map((auction) => (
                 <TableRow key={auction.id}>
                   <TableCell>{auction.title}</TableCell>
-                  <TableCell>{auction.user ? auction.user.userName : 'N/A'}</TableCell>
+                  <TableCell>{auction.user?.userName || 'N/A'}</TableCell>
                   <TableCell>${auction.startPrice}</TableCell>
                   <TableCell>
                     <Chip 

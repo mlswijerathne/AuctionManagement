@@ -1,188 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Grid, 
-  Card, 
-  CardContent, 
-  CardMedia, 
-  Button,
-  Chip,
-  Divider,
-} from '@mui/material';
-import { Clock, Tag, TrendingUp, Gavel, Star } from 'lucide-react';
+import { ArrowRight, Car, Gauge, Trophy } from 'lucide-react';
+import homeBg from '../assets/home.png';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [featuredAuctions, setFeaturedAuctions] = useState([]);
-  const [popularAuctions, setPopularAuctions] = useState([]);
-
-  const getTimeLeftString = (timeLeft) => {
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    if (days > 0) return `${days}d ${hours}h left`;
-    return `${hours}h left`;
-  };
-
-  const AuctionCard = ({ auction, featured }) => (
-    <Card 
-      className="h-full rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-    >
-      <Box className="relative pt-[75%]">
-        <CardMedia
-          component="img"
-          src={auction.photoUrl || "/placeholder.jpg"}
-          alt={auction.title}
-          className="absolute top-0 left-0 w-full h-full object-cover p-4 bg-gray-50"
-        />
-        {featured && (
-          <Chip
-            icon={<Star className="w-4 h-4" />}
-            label="Featured"
-            className="absolute top-4 right-4 bg-orange-500 text-white"
-            size="small"
-          />
-        )}
-      </Box>
-      <CardContent className="p-6">
-        <Typography className="text-2xl font-bold mb-2">
-          {auction.title}
-        </Typography>
-        
-        <Typography className="text-3xl font-bold text-orange-500 mb-4">
-          ${auction.startingPrice}
-        </Typography>
-
-        <Grid container spacing={2} className="mb-4">
-          <Grid item xs={6}>
-            <Chip
-              icon={<Clock className="w-4 h-4" />}
-              label={getTimeLeftString(auction.timeLeft)}
-              size="small"
-              className={auction.timeLeft < 86400000 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Chip
-              icon={<Gavel className="w-4 h-4" />}
-              label={`${auction.bidsCount} bids`}
-              size="small"
-              className="bg-gray-100"
-            />
-          </Grid>
-        </Grid>
-
-        <Typography className="text-gray-600 mb-4 line-clamp-2 h-12">
-          {auction.description}
-        </Typography>
-
-        <Button 
-          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg py-3 hover:from-orange-600 hover:to-orange-700"
-          onClick={() => navigate(`/auctiondetails/${auction.id}`)}
-        >
-          View Details
-        </Button>
-      </CardContent>
-    </Card>
-  );
 
   return (
-    <Box className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Hero Section */}
-      <Box className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-20">
-        <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography className="text-5xl font-bold mb-6">
-                Find Your Dream Car at Auction
-              </Typography>
-              <Typography className="text-xl mb-8 text-orange-100">
-                Discover amazing deals on luxury, classic, and performance vehicles
-              </Typography>
-              <Button
-                startIcon={<Tag />}
-                className="bg-white text-orange-600 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-orange-50"
-                onClick={() => navigate('/addauction')}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/60 z-10" />
+        <img 
+          src={homeBg} 
+          alt="Luxury cars"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        
+        <div className="relative z-20 max-w-7xl mx-auto px-4 py-32 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl mb-8">
+              Discover Exceptional Cars at Auction
+            </h1>
+            <p className="mt-6 text-xl text-gray-200 max-w-2xl mx-auto mb-12">
+              Join exclusive auctions featuring premium, luxury, and classic vehicles from trusted sellers worldwide.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button className="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all duration-200 flex items-center gap-2">                
+                Start Bidding
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => navigate('/allauctions')}
+                className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-200"
               >
-                Start Bidding Now
-              </Button>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <img 
-                src="/api/placeholder/600/400" 
-                alt="Featured Cars"
-                className="rounded-2xl shadow-2xl"
-              />
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+                View All Auctions
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {/* Featured Auctions */}
-      <Container maxWidth="lg" className="py-16">
-        <Box className="mb-12">
-          <Typography className="text-3xl font-bold mb-2 flex items-center gap-2">
-            <Star className="w-8 h-8 text-orange-500" />
-            Featured Auctions
-          </Typography>
-          <Typography className="text-gray-600">
-            Hand-picked premium vehicles you don't want to miss
-          </Typography>
-        </Box>
+      {/* Features Section */}
+      <div className="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-200">
+            <div className="bg-blue-50 w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+              <Car className="w-8 h-8 text-blue-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-4">Premium Selection</h3>
+            <p className="text-gray-600">Curated collection of exceptional vehicles from trusted sellers worldwide.</p>
+          </div>
 
-        <Grid container spacing={4}>
-          {featuredAuctions.map((auction) => (
-            <Grid item xs={12} sm={6} md={4} key={auction.id}>
-              <AuctionCard auction={auction} featured={true} />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+          <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-200">
+            <div className="bg-green-50 w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+              <Gauge className="w-8 h-8 text-green-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-4">Smart Bidding</h3>
+            <p className="text-gray-600">Real-time updates and automated bidding to help you win your dream car.</p>
+          </div>
 
-      {/* Most Bids Section */}
-      <Box className="bg-gray-100 py-16">
-        <Container maxWidth="lg">
-          <Box className="mb-12">
-            <Typography className="text-3xl font-bold mb-2 flex items-center gap-2">
-              <TrendingUp className="w-8 h-8 text-orange-500" />
-              Most Popular Auctions
-            </Typography>
-            <Typography className="text-gray-600">
-              Auctions generating the most excitement among bidders
-            </Typography>
-          </Box>
-
-          <Grid container spacing={4}>
-            {popularAuctions.map((auction) => (
-              <Grid item xs={12} sm={6} md={4} key={auction.id}>
-                <AuctionCard auction={auction} />
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* Statistics Section */}
-      <Container maxWidth="lg" className="py-16">
-        <Grid container spacing={4}>
-          {[
-            { label: 'Active Auctions', value: '250+', icon: <Gavel /> },
-            { label: 'Registered Bidders', value: '10,000+', icon: <Tag /> },
-            { label: 'Cars Sold', value: '5,000+', icon: <TrendingUp /> }
-          ].map((stat, index) => (
-            <Grid item xs={12} md={4} key={index}>
-              <Card className="text-center p-6 bg-gray-50">
-                <Box className="text-orange-500 mb-4">{stat.icon}</Box>
-                <Typography className="text-4xl font-bold mb-2">{stat.value}</Typography>
-                <Typography className="text-gray-600">{stat.label}</Typography>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </Box>
+          <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-200">
+            <div className="bg-orange-50 w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+              <Trophy className="w-8 h-8 text-orange-500" />
+            </div>
+            <h3 className="text-xl font-bold mb-4">Verified Quality</h3>
+            <p className="text-gray-600">Each vehicle undergoes thorough inspection and verification process.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

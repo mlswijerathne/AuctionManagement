@@ -1,4 +1,3 @@
-// login.jsx
 import { useState, useEffect } from 'react';
 import LoginBox from "../features/loginBox";
 import AuthViewModel from "../viewModels/AuthViewModel";
@@ -36,11 +35,14 @@ const LoginPage = () => {
         return;
       }
 
+      // Show success message
+      alert('Login successful!');
+
       setIsAuthenticated(true);
       if (AuthService.isAdmin()) {
         navigate('/admin/dashboard');
       } else {
-        navigate('/home'); // Redirect to home or user's dashboard
+        navigate('/'); // Redirect to home or user's dashboard
       }
       
     } catch (error) {
@@ -52,6 +54,7 @@ const LoginPage = () => {
   const handleLogout = () => {
     AuthService.logout();
     setIsAuthenticated(false);
+    alert('Logged out successfully!');
     navigate('/login'); // Redirect to login page
   };
 

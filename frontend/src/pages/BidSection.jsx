@@ -41,7 +41,8 @@ const BidSection = () => {
                 const auctionData = await AuctionService.getAuction(auctionId);
                 if (auctionData && !auctionData.error) {
                     setAuction(auctionData);
-                    setIsOwner(auctionData.ownerId === userId);
+                    const isOwnerCheck = String(auctionData.ownerId).toLowerCase() === String(userId).toLowerCase();
+                    setIsOwner(isOwnerCheck);
                 }
                 await refreshBidData();
             } catch (err) {
@@ -61,44 +62,58 @@ const BidSection = () => {
     };
 
     const handleBidSubmit = async (e) => {
-      e.preventDefault();
-      
-      if (isOwner) {
-          setError("You cannot place a bid on your own auction.");
-          return;
-      }
-  
-      const bidAmountFloat = parseFloat(bidAmount);
-      if (!bidAmount || isNaN(bidAmountFloat) || bidAmountFloat <= 0) {
-          setError("Please enter a valid bid amount.");
-          return;
-      }
-  
-      // Validate against highest bid
-      if (highestBid && bidAmountFloat <= highestBid.amount) {
-          setError(`Bid must be higher than current highest bid: $${highestBid.amount}`);
-          return;
-      }
-  
-      try {
-          const createBidDto = new CreateBidDto();
-          createBidDto.auctionId = parseInt(auctionId);
-          createBidDto.amount = bidAmountFloat;
-  
-          const response = await BidService.createBid(createBidDto);
-          
-          if (response.error) {
-              setError(response.error);
-          } else {
-              setSuccess('Bid placed successfully!');
-              setBidAmount('');
-              await refreshBidData();
-          }
-      } catch (err) {
-          console.error("Error submitting bid:", err);
-          setError("Failed to place bid. Please try again.");
-      }
-  };
+        e.preventDefault();
+        setError('');
+        setSuccess('');
+    
+        // 1. Validate ownership first
+        if (!auction || !userId) {
+            setError("Unable to verify auction details. Please try again.");
+            return;
+        }
+    
+        if (String(auction.ownerId).toLowerCase() === String(userId).toLowerCase()) {
+            setError("You cannot place a bid on your own auction.");
+            return;
+        }
+    
+        // 2. Validate bid amount
+        const bidAmountFloat = parseFloat(bidAmount);
+        if (!bidAmount || isNaN(bidAmountFloat) || bidAmountFloat <= 0) {
+            setError("Please enter a valid bid amount.");
+            return;
+        }
+    
+        if (highestBid && bidAmountFloat <= highestBid.amount) {
+            setError(`Bid must be higher than current highest bid: $${highestBid.amount}`);
+            return;
+        }
+    
+        try {
+            const createBidDto = new CreateBidDto();
+            createBidDto.auctionId = parseInt(auctionId);
+            createBidDto.amount = bidAmountFloat;
+            createBidDto.userId = userId; // Add userId for additional server-side validation
+    
+            const response = await BidService.createBid(createBidDto);
+            
+            if (response.error) {
+                setError(response.error);
+                return;
+            }
+    
+            // Only set success if we have a valid bid response
+            if (response.id || response.bidId) {
+                setSuccess('Bid placed successfully!');
+                setBidAmount('');
+                await refreshBidData();
+            } else {
+                setError("Invalid response from server. Please try again.");
+            }
+        } catch (err) {
+            setError("An unexpected error occurred. Please try again.");
+        }
+    };
 
     if (!auction) {
         return null;
