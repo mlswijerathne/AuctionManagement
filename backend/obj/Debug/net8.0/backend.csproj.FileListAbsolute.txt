@@ -206,7 +206,6 @@ C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Micro
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\MimeTypesMap.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Mono.TextTemplating.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\MySqlConnector.dll
@@ -223,13 +222,10 @@ C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Syste
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Composition.Runtime.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Composition.TypedParts.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Drawing.Common.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Memory.Data.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Runtime.Caching.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Security.Permissions.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\System.Windows.Extensions.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -288,12 +284,7 @@ C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runti
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\obj\Debug\net8.0\backend.csproj.AssemblyReference.cache
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\obj\Debug\net8.0\backend.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\obj\Debug\net8.0\backend.AssemblyInfoInputs.cache
@@ -478,3 +469,4 @@ C:\Users\laksh\OneDrive\Desktop\New folder\AuctionManagement\backend\obj\Debug\n
 C:\Users\laksh\OneDrive\Desktop\New folder\AuctionManagement\backend\obj\Debug\net8.0\backend.pdb
 C:\Users\laksh\OneDrive\Desktop\New folder\AuctionManagement\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\Users\laksh\OneDrive\Desktop\New folder\AuctionManagement\backend\obj\Debug\net8.0\ref\backend.dll
+C:\Users\laksh\OneDrive\Desktop\AuctionManagement\backend\bin\Debug\net8.0\Stripe.net.dll

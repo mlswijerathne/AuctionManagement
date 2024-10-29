@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import {
     Box,
     Card,
@@ -18,8 +19,11 @@ import {
 import BidService from '../services/bidService';
 import AuctionViewModel from '../viewModels/AuctionViewModel';
 import AuctionService from '../services/auctionService';
+import { loadStripe } from '@stripe/stripe-js';
 
-const CheckoutPage = () => {
+const stripePromise = loadStripe('pk_test_51QEsXwJWmuetapVPHqDUJBci8KZA3tFHv5UZEBQF3bjHN7rtaZwy3CMfN813TZbtanrnwKdNBWi2tSJUi5z6z8dD00hpeHRRqL');
+
+const CheckoutForm = () => {
     const [bid, setBid] = useState(null);
     const [auctionDetails, setAuctionDetails] = useState(null);
     const [highestBid, setHighestBid] = useState(null);
@@ -28,6 +32,8 @@ const CheckoutPage = () => {
     const [activeStep, setActiveStep] = useState(0);
     const { bidId } = useParams();
     const navigate = useNavigate();
+    const stripe = useStripe();
+    const elements = useElements();
 
     const steps = ['Review Order', 'Payment', 'Confirmation'];
 
@@ -39,28 +45,23 @@ const CheckoutPage = () => {
                     setLoading(false);
                     return;
                 }
-                // Fetch bid details
                 const bidResponse = await BidService.getBid(bidId);
                 if (bidResponse.error) {
                     throw new Error(bidResponse.error);
                 }
                 setBid(bidResponse);
 
-                // Fetch auction details using AuctionViewModel
                 const auctionResponse = await AuctionViewModel.getAuction(bidResponse.auctionId);
                 if (auctionResponse.error) {
-                    console.error('Error fetching auction:', auctionResponse);
                     throw new Error(auctionResponse.error);
                 }
                 setAuctionDetails(auctionResponse);
 
-                // Fetch highest bid for the auction
                 const highestBidResponse = await BidService.getHighestBid(bidResponse.auctionId);
                 if (highestBidResponse) {
                     setHighestBid(highestBidResponse);
                 }
 
-                // Fetch auction photo if needed
                 const photoResponse = await AuctionService.getAuctionPhoto(bidResponse.auctionId);
                 if (photoResponse && !photoResponse.error) {
                     setAuctionDetails(prev => ({
@@ -69,7 +70,6 @@ const CheckoutPage = () => {
                     }));
                 }
             } catch (err) {
-                console.error('Error in fetchAllDetails:', err);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -77,24 +77,37 @@ const CheckoutPage = () => {
         };
 
         fetchAllDetails();
-
-        // Cleanup function for photo URL
-        return () => {
-            if (auctionDetails?.photoUrl) {
-                URL.revokeObjectURL(auctionDetails.photoUrl);
-            }
-        };
     }, [bidId]);
 
     const handleCheckout = async () => {
+        if (!stripe || !elements) {
+            return;
+        }
+
+        const cardElement = elements.getElement(CardElement);
+
+        if (!cardElement) {
+            console.error("Card element is not found.");
+            return;
+        }
+
         try {
             setLoading(true);
-            const response = await BidService.checkoutBid(bidId);
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+            });
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const response = await BidService.checkoutBid(bidId, paymentMethod.id);
             if (response.error) {
                 throw new Error(response.error);
             }
+
             setActiveStep(2);
-            // Navigate to success page or show success message
         } catch (err) {
             setError(err.message);
         } finally {
@@ -218,11 +231,12 @@ const CheckoutPage = () => {
                                         </Grid>
                                     </Grid>
                                 </Box>
+                                <CardElement options={{ style: { base: { color: '#fff', fontSize: '16px', '::placeholder': { color: '#fff' } } } }} />
                                 <Button
                                     variant="contained"
                                     fullWidth
                                     onClick={handleCheckout}
-                                    disabled={bid?.amount < highestBid?.amount}
+                                    disabled={!stripe || bid?.amount < highestBid?.amount}
                                     sx={{
                                         mt: 2,
                                         backgroundColor: 'white',
@@ -245,6 +259,14 @@ const CheckoutPage = () => {
                 </Grid>
             </Paper>
         </Box>
+    );
+};
+
+const CheckoutPage = () => {
+    return (
+        <Elements stripe={stripePromise}>
+            <CheckoutForm />
+        </Elements>
     );
 };
 

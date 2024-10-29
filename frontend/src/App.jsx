@@ -27,6 +27,11 @@ import AdminDashboard from './pages/AdminDashboard';
 import AuthGuard from './pages/AuthGuard';
 import AdminProfile from './pages/AdminProfile';
 import CheckoutPage from './pages/CheckoutPage';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+// Load your Stripe public key
+const stripePromise = loadStripe('pk_test_51QEsXwJWmuetapVPHqDUJBci8KZA3tFHv5UZEBQF3bjHN7rtaZwy3CMfN813TZbtanrnwKdNBWi2tSJUi5z6z8dD00hpeHRRqL');
 
 // Protected route component for admin
 const ProtectedAdminRoute = ({ children }) => {
@@ -92,58 +97,67 @@ function App() {
     : userNavLinks;
 
   return (
-    <>
-      <ThemeProvider theme={theme.theme}>
-        <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
-          <CssBaseline />
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/contact-us" element={<ContactUsPage />} />
-            <Route path="/aboutus" element={<AboutUsPage />} />
+    <ThemeProvider theme={theme.theme}>
+      <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
+        <CssBaseline />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/contact-us" element={<ContactUsPage />} />
+          <Route path="/aboutus" element={<AboutUsPage />} />
 
-            {/* Protected User Routes */}
-            <Route path="/addauction" element={<ProtectedUserRoute><AddAuctionPage /></ProtectedUserRoute>} />
-            <Route path="/profile" element={<ProtectedUserRoute><ProfilePage /></ProtectedUserRoute>} />
-            <Route path="/dashboard" element={<ProtectedUserRoute><DashboardPage /></ProtectedUserRoute>} />
-            <Route path="/editprofile" element={<ProtectedUserRoute><EditProfilePage /></ProtectedUserRoute>} />
-            <Route path="/setimage" element={<ProtectedUserRoute><SetImagePage /></ProtectedUserRoute>} />
-            <Route path="/myauctions" element={<ProtectedUserRoute><MyAuctionsPage /></ProtectedUserRoute>} />
-            <Route path="/auctiondetails/:id" element={<ProtectedUserRoute><AuctionDetailsPage /></ProtectedUserRoute>} />
-            <Route path="/allAuctions" element={<ProtectedUserRoute><AllAuctionsPage /></ProtectedUserRoute>} />
-            <Route path="/auctions/edit/:id" element={<ProtectedUserRoute><OwnAuctionEditPage /></ProtectedUserRoute>} />
-            <Route path="/bidsection" element={<ProtectedUserRoute><BidSectionPage /></ProtectedUserRoute>} />
-            <Route path="/auction/:auctionId" element={<ProtectedUserRoute><AuctionDetailsBox /></ProtectedUserRoute>} />
-            <Route path="/bid/:auctionId" element={<ProtectedUserRoute><BidSectionPage /></ProtectedUserRoute>} />
-            <Route path="/checkout/:bidId" element={<ProtectedUserRoute><CheckoutPage /></ProtectedUserRoute>} />
+          {/* Protected User Routes */}
+          <Route path="/addauction" element={<ProtectedUserRoute><AddAuctionPage /></ProtectedUserRoute>} />
+          <Route path="/profile" element={<ProtectedUserRoute><ProfilePage /></ProtectedUserRoute>} />
+          <Route path="/dashboard" element={<ProtectedUserRoute><DashboardPage /></ProtectedUserRoute>} />
+          <Route path="/editprofile" element={<ProtectedUserRoute><EditProfilePage /></ProtectedUserRoute>} />
+          <Route path="/setimage" element={<ProtectedUserRoute><SetImagePage /></ProtectedUserRoute>} />
+          <Route path="/myauctions" element={<ProtectedUserRoute><MyAuctionsPage /></ProtectedUserRoute>} />
+          <Route path="/auctiondetails/:id" element={<ProtectedUserRoute><AuctionDetailsPage /></ProtectedUserRoute>} />
+          <Route path="/allAuctions" element={<ProtectedUserRoute><AllAuctionsPage /></ProtectedUserRoute>} />
+          <Route path="/auctions/edit/:id" element={<ProtectedUserRoute><OwnAuctionEditPage /></ProtectedUserRoute>} />
+          <Route path="/bidsection" element={<ProtectedUserRoute><BidSectionPage /></ProtectedUserRoute>} />
+          <Route path="/auction/:auctionId" element={<ProtectedUserRoute><AuctionDetailsBox /></ProtectedUserRoute>} />
+          <Route path="/bid/:auctionId" element={<ProtectedUserRoute><BidSectionPage /></ProtectedUserRoute>} />
+          
+          {/* Wrap CheckoutPage in Elements provider */}
+          <Route 
+            path="/checkout/:bidId" 
+            element={
+              <ProtectedUserRoute>
+                <Elements stripe={stripePromise}>
+                  <CheckoutPage />
+                </Elements>
+              </ProtectedUserRoute>
+            } 
+          />
 
-            {/* Protected Admin Routes */}
-            <Route 
-              path="/admin/dashboard" 
-              element={
-                <ProtectedAdminRoute>
-                  <AdminDashboard />
-                </ProtectedAdminRoute>
-              } 
-            />
-            <Route 
-              path="/admin/profile" 
-              element={
-                <ProtectedAdminRoute>
-                  <AdminProfile />
-                </ProtectedAdminRoute>
-              } 
-            />
+          {/* Protected Admin Routes */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboard />
+              </ProtectedAdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/profile" 
+            element={
+              <ProtectedAdminRoute>
+                <AdminProfile />
+              </ProtectedAdminRoute>
+            } 
+          />
 
-            {/* Fallback Route */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Layout>
-      </ThemeProvider>
-    </>
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </ThemeProvider>
   );
 }
 
